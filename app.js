@@ -4,7 +4,6 @@ const bodyparser = require('body-parser');
 const { response } = require('express');
 
 const app = express();
-const port = process.env.PORT || 5000;
 
 app.use(cors());
 
@@ -78,9 +77,10 @@ app.get('/BestelFormDessert', function(req, res){ //GET method to access DB and 
     res.end(JSON.stringify(data));
   });
 });
+/*
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`);
-});
+});*/
 
 
 app.get('/LastOrder', function(req, res){ //GET method to access DB and return results in JSON
