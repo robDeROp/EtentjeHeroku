@@ -77,10 +77,9 @@ app.get('/BestelFormDessert', function(req, res){ //GET method to access DB and 
     res.end(JSON.stringify(data));
   });
 });
-/*
-app.listen(port, () => {
-    console.log(`Example app listening at http://localhost:${port}`);
-});*/
+app.listen(process.env.PORT || 3000, function(){
+  console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
+});
 
 
 app.get('/LastOrder', function(req, res){ //GET method to access DB and return results in JSON
