@@ -191,7 +191,7 @@ app.get('/NewOrderLine/:OrderID/:ProdID/:ProdQuantity', function(req, res){ //GE
 
 /*getting bar order*/
 app.get('/BarOrder', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT O.Family_ID, O.Table_ID, P.Description, D.Quantity FROM Orders O JOIN OrderDetails D ON O.ID=D.OrderID JOIN Products P ON D.ProductID = P.ID WHERE P.Category = "Drank" AND O.ID IN ( SELECT MIN(ID) FROM Orders WHERE BarPrint="0" )',
+  connection.query('SELECT O.ID, O.Family_ID, O.Table_ID, P.Description, D.Quantity FROM Orders O JOIN OrderDetails D ON O.ID=D.OrderID JOIN Products P ON D.ProductID = P.ID WHERE P.Category = "Drank" AND O.ID IN ( SELECT MIN(ID) FROM Orders WHERE BarPrint="0" )',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -204,8 +204,8 @@ app.get('/BarOrder', function(req, res){ //GET method to access DB and return re
 });
 /*Change ORDER PRINT STATE*/
 
-app.get('/BarOrderPrinted', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('UPDATE Orders SET BarPrint= "1" WHERE ID = ""',
+app.get('/BarOrderPrinted/:OrderID', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('UPDATE Orders SET BarPrint= "1" WHERE ID = "'+req.params.OrderID+'"',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -217,8 +217,8 @@ app.get('/BarOrderPrinted', function(req, res){ //GET method to access DB and re
   });
 });
 
-app.get('/KeukenOrderPrinted', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('UPDATE Orders SET KeukenPrint= "1" WHERE ID = ""',
+app.get('/KeukenOrderPrinted/:OrderID', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('UPDATE Orders SET KeukenPrint= "1" WHERE ID = "'+req.params.OrderID+'"',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
