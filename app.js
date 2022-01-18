@@ -83,7 +83,7 @@ app.listen(process.env.PORT || 3000, function(){
 
 
 app.get('/LastOrder/:Wid', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT MAX(ID) as id FROM Orders WHERE Waiter_ID= "' + req.params.id + '"',
+  connection.query('SELECT MAX(ID) as id FROM Orders WHERE Waiter_ID= "' + req.params.Wid + '"',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
