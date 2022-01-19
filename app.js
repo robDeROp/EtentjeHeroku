@@ -191,7 +191,7 @@ app.get('/NewOrderLine/:OrderID/:ProdID/:ProdQuantity', function(req, res){ //GE
 
 /*getting bar order*/
 app.get('/BarOrder', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT O.ID, O.Family_ID, O.Table_ID, P.Description, D.Quantity FROM Orders O JOIN OrderDetails D ON O.ID=D.OrderID JOIN Products P ON D.ProductID = P.ID WHERE P.Category = "Drank" AND O.ID IN ( SELECT MIN(ID) FROM Orders WHERE BarPrint="0" )',
+  connection.query('SELECT O.ID, O.Family_ID, O.Table_ID, P.Description, D.Quantity FROM Orders O JOIN OrderDetails D ON O.ID=D.OrderID JOIN Products P ON D.ProductID = P.ID WHERE P.Category = "Drank" AND O.ID IN ( SELECT MIN(O.ID) FROM Orders O JOIN OrderDetails D ON O.ID=D.OrderID JOIN Products P ON D.ProductID = P.ID WHERE O.BarPrint="0" AND P.Category = "Drank" )',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -202,8 +202,9 @@ app.get('/BarOrder', function(req, res){ //GET method to access DB and return re
     res.end(JSON.stringify(data));
   });
 });
+
 app.get('/KeukenOrder', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT O.ID, O.Family_ID, O.Table_ID, P.Description, D.Quantity FROM Orders O JOIN OrderDetails D ON O.ID=D.OrderID JOIN Products P ON D.ProductID = P.ID WHERE (P.Category = "Voorgerecht" || P.Category = "Hoofdgerecht" || P.Category = "Dessert") AND O.ID IN ( SELECT MIN(ID) FROM Orders WHERE KeukenPrint="0" )',
+  connection.query('SELECT O.ID, O.Family_ID, O.Table_ID, P.Description, D.Quantity FROM Orders O JOIN OrderDetails D ON O.ID=D.OrderID JOIN Products P ON D.ProductID = P.ID WHERE (P.Category = "Voorgerecht" || P.Category = "Hoofdgerecht" || P.Category = "Dessert") AND O.ID IN ( SELECT MIN(O.ID) FROM Orders O JOIN OrderDetails D ON O.ID=D.OrderID JOIN Products P ON D.ProductID = P.ID WHERE O.KeukenPrint="0" AND (P.Category = "Voorgerecht" || P.Category = "Hoofdgerecht" || P.Category = "Dessert"))',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
