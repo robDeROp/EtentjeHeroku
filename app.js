@@ -244,7 +244,7 @@ app.get('/KeukenOrderPrinted/:OrderID', function(req, res){ //GET method to acce
 });
 
 app.get('/GetProductTotQuan', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT P.Description, D.ProductID, P.ID, SUM(D.quantity) FROM OrderDetails D RIGHT OUTER JOIN Products P ON D.ProductID = P.ID GROUP BY P.ID ORDER BY P.ID ',
+  connection.query('SELECT P.Description, D.ProductID, P.ID, SUM(D.quantity) as Quantity FROM OrderDetails D RIGHT OUTER JOIN Products P ON D.ProductID = P.ID GROUP BY P.ID ORDER BY P.ID ',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
