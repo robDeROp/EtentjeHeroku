@@ -242,3 +242,16 @@ app.get('/KeukenOrderPrinted/:OrderID', function(req, res){ //GET method to acce
     res.end(JSON.stringify(data));
   });
 });
+
+app.get('/GetProductTotQuan', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT P.Description, D.ProductID, P.ID, SUM(D.quantity) FROM OrderDetails D RIGHT OUTER JOIN Products P ON D.ProductID = P.ID GROUP BY P.ID ORDER BY P.ID ',
+  function(err, rows, fields){
+    if(err) throw err;
+    var data = [];
+    for(i=0;i<rows.length;i++){
+      data.push(rows[i]);
+    }
+    console.log(JSON.stringify(data));
+    res.end(JSON.stringify(data));
+  });
+});
