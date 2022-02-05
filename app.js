@@ -28,8 +28,8 @@ app.get('/searchWaiter/:id', function(req, res){ //GET method to access DB and r
   });
 });
 
-app.get('/searchFamillie/:id', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT Name FROM Families WHERE ID LIKE "' + req.params.id + '"',
+app.get('/searchFamillie/:name', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT Name FROM Families WHERE Name LIKE "' + req.params.name + '"',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -40,6 +40,20 @@ app.get('/searchFamillie/:id', function(req, res){ //GET method to access DB and
     res.end(JSON.stringify(data));
   });
 });
+
+app.get('/newFam/:name/:capacity', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('INSERT INTO Families(Name, Capacity) VALUES ("' + req.params.name + '", "' + req.params.capacity + '") ',
+  function(err, rows, fields){
+    if(err) throw err;
+    var data = [];
+    for(i=0;i<rows.length;i++){
+      data.push(rows[i]);
+    }
+    console.log(JSON.stringify(data));
+    res.end(JSON.stringify(data));
+  });
+});
+
 app.get('/BestelFormDrank', function(req, res){ //GET method to access DB and return results in JSON
   connection.query('SELECT Description, ID FROM Products WHERE Category LIKE "Drank"',
   function(err, rows, fields){
@@ -255,3 +269,4 @@ app.get('/GetProductTotQuan', function(req, res){ //GET method to access DB and 
     res.end(JSON.stringify(data));
   });
 });
+
