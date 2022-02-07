@@ -28,6 +28,32 @@ app.get('/searchWaiter/:id', function(req, res){ //GET method to access DB and r
   });
 });
 
+app.get('/DetailsOrder/:id', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT P.Description, D.Quantity FROM Orders O INNER JOIN OrderDetails D ON O.ID=D.OrderID INNER JOIN Products P ON D.ProductID=P.ID WHERE O.ID LIKE "' + req.params.id + '"',
+  function(err, rows, fields){
+    if(err) throw err;
+    var data = [];
+    for(i=0;i<rows.length;i++){
+      data.push(rows[i]);
+    }
+    console.log(JSON.stringify(data));
+    res.end(JSON.stringify(data));
+  });
+});
+
+app.get('/LastTenOrders', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT O.ID, O.Waiter_ID, TimeWeb FROM Orders O ORDER BY O.ID DESC limit 0,10',
+  function(err, rows, fields){
+    if(err) throw err;
+    var data = [];
+    for(i=0;i<rows.length;i++){
+      data.push(rows[i]);
+    }
+    console.log(JSON.stringify(data));
+    res.end(JSON.stringify(data));
+  });
+});
+
 app.get('/searchFamillie/:name', function(req, res){ //GET method to access DB and return results in JSON
   connection.query('SELECT Name FROM Families WHERE Name LIKE "' + req.params.name + '"',
   function(err, rows, fields){
