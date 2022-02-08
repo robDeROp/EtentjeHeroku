@@ -150,8 +150,8 @@ app.get('/LastOrder/:Wid', function(req, res){ //GET method to access DB and ret
   });
 
 
-app.get('/AllTotal/:id', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT SUM(P.Price * D.Quantity) as Totaal, F.Name FROM Products P INNER JOIN OrderDetails D ON P.ID = D.ProductID INNER JOIN Orders O ON D.OrderID = O.ID INNER JOIN Families F ON F.ID = O.Family_ID WHERE F.ID = "' + req.params.id + '" AND O.Payed="0"',
+app.get('/AllTotal/:name', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT SUM(P.Price * D.Quantity) as Totaal, F.Name FROM Products P INNER JOIN OrderDetails D ON P.ID = D.ProductID INNER JOIN Orders O ON D.OrderID = O.ID INNER JOIN Families F ON F.ID = O.Family_ID WHERE F.Name = "' + req.params.name + '" AND O.Payed="0"',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -163,8 +163,8 @@ app.get('/AllTotal/:id', function(req, res){ //GET method to access DB and retur
   });
 });
 
-app.get('/Reciept/:id', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT  SUM(d.Quantity) as Quantity, p.Description, (p.Price*SUM(d.Quantity)) as Totaal FROM Products p INNER JOIN OrderDetails d ON p.ID = d.ProductID  INNER JOIN  Orders o ON o.ID = d.OrderID WHERE o.Family_ID = "' + req.params.id + '" AND o.Payed="0" GROUP BY p.Description',
+app.get('/Reciept/:name', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT  SUM(d.Quantity) as Quantity, p.Description, (p.Price*SUM(d.Quantity)) as Totaal FROM Products p INNER JOIN OrderDetails d ON p.ID = d.ProductID  INNER JOIN  Orders o ON o.ID = d.OrderID INNER JOIN Families F ON F.ID = O.Family_ID WHERE  F.Name = "' + req.params.name + '" AND o.Payed="0" GROUP BY p.Description',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -176,8 +176,8 @@ app.get('/Reciept/:id', function(req, res){ //GET method to access DB and return
   });
 });
 
-app.get('/OrderLines/:id', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT O.ID, D.Quantity, P.Description, P.Price, (D.Quantity * P.Price) as Total FROM Orders O INNER JOIN OrderDetails D ON O.ID = D.OrderID INNER JOIN Products P ON D.ProductID = P.ID WHERE O.Family_ID =  "' + req.params.id + '"AND O.Payed="0"',
+app.get('/OrderLines/:name', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT O.ID, D.Quantity, P.Description, P.Price, (D.Quantity * P.Price) as Total FROM Orders O INNER JOIN OrderDetails D ON O.ID = D.OrderID INNER JOIN Products P ON D.ProductID = P.ID INNER JOIN Families F ON F.ID = O.Family_ID WHERE F.Name =  "' + req.params.name + '"AND O.Payed="0"',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -189,8 +189,8 @@ app.get('/OrderLines/:id', function(req, res){ //GET method to access DB and ret
   });
 });
 
-app.get('/OrderAndTotal/:id', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT O.ID, SUM(D.Quantity*P.Price) as OrderTotal FROM Orders O INNER JOIN OrderDetails D ON O.ID = D.OrderID INNER JOIN Products P ON P.ID = D.ProductID WHERE O.Family_ID = "' + req.params.id + '" AND O.Payed="0" GROUP BY O.ID',
+app.get('/OrderAndTotal/:name', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT O.ID, SUM(D.Quantity*P.Price) as OrderTotal FROM Orders O INNER JOIN OrderDetails D ON O.ID = D.OrderID INNER JOIN Products P ON P.ID = D.ProductID INNER JOIN Families F ON F.ID = O.Family_ID WHERE O.Family_ID = "' + req.params.name + '" AND O.Payed="0" GROUP BY O.ID',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
