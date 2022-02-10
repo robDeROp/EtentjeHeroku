@@ -14,7 +14,33 @@ var connection = mysql.createConnection({
   password: 'Sp15021!',
   database: 'ID362979_Etentje'
 })
+//ADMIN PAGINA
 
+app.get('/ReprintStatusUpdateBar/:id', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('UPDATE `Orders` SET `BarPrint`="1" WHERE `ID`="' + req.params.name + '" ',
+  function(err, rows, fields){
+    if(err) throw err;
+    var data = [];
+    for(i=0;i<rows.length;i++){
+      data.push(rows[i]);
+    }
+    console.log(JSON.stringify(data));
+    res.end(JSON.stringify(data));
+  });
+});
+app.get('/ReprintStatusUpdateKeuken/:id', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('UPDATE `Orders` SET `KeukenPrint`="1" WHERE `ID`="' + req.params.name + '" ',
+  function(err, rows, fields){
+    if(err) throw err;
+    var data = [];
+    for(i=0;i<rows.length;i++){
+      data.push(rows[i]);
+    }
+    console.log(JSON.stringify(data));
+    res.end(JSON.stringify(data));
+  });
+});
+//BREF
 app.get('/GetFamID/:name', function(req, res){ //GET method to access DB and return results in JSON
   connection.query('SELECT ID FROM Families WHERE Name LIKE "' + req.params.name + '"',
   function(err, rows, fields){
