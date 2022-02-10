@@ -17,7 +17,7 @@ var connection = mysql.createConnection({
 //ADMIN PAGINA
 
 app.get('/ReprintStatusUpdateBar/:id', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('UPDATE `Orders` SET `BarPrint`="1" WHERE `ID`="' + req.params.name + '" ',
+  connection.query('UPDATE `Orders` SET `BarPrint`="0" WHERE `ID`="' + req.params.name + '" ',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -29,7 +29,7 @@ app.get('/ReprintStatusUpdateBar/:id', function(req, res){ //GET method to acces
   });
 });
 app.get('/ReprintStatusUpdateKeuken/:id', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('UPDATE `Orders` SET `KeukenPrint`="1" WHERE `ID`="' + req.params.name + '" ',
+  connection.query('UPDATE `Orders` SET `KeukenPrint`="0" WHERE `ID`="' + req.params.name + '" ',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
