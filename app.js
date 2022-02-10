@@ -216,8 +216,8 @@ app.get('/OrderAndTotal/:name', function(req, res){ //GET method to access DB an
 });
 
 
-app.get('/NewOrder/:WaiterID/:FamilieID/:TableID/:TimeWeb', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('INSERT INTO Orders(Waiter_ID,Family_ID,Table_ID,TimeWeb) VALUES ("'+ req.params.WaiterID +'","'+ req.params.FamilieID +'","'+ req.params.TableID +'","'+ req.params.TimeWeb +'")',
+app.get('/NewOrder/:WaiterID/:FamilieID/:TableID/:TimeWeb/:Opmerking', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('INSERT INTO Orders(Waiter_ID,Family_ID,Table_ID,TimeWeb,Opmerking) VALUES ("'+ req.params.WaiterID +'","'+ req.params.FamilieID +'","'+ req.params.TableID +'","'+ req.params.TimeWeb + '","'+ req.params.Opmerking +'")',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
