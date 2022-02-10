@@ -15,6 +15,19 @@ var connection = mysql.createConnection({
   database: 'ID362979_Etentje'
 })
 
+app.get('/GetFamID/:name', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT ID FROM Families WHERE Name LIKE "' + req.params.name + '"',
+  function(err, rows, fields){
+    if(err) throw err;
+    var data = [];
+    for(i=0;i<rows.length;i++){
+      data.push(rows[i]);
+    }
+    console.log(JSON.stringify(data));
+    res.end(JSON.stringify(data));
+  });
+});
+
 app.get('/searchWaiter/:id', function(req, res){ //GET method to access DB and return results in JSON
   connection.query('SELECT FirstName FROM Waiters WHERE ID LIKE "' + req.params.id + '"',
   function(err, rows, fields){
