@@ -270,7 +270,7 @@ app.get('/NewOrderLine/:OrderID/:ProdID/:ProdQuantity', function(req, res){ //GE
 
 /*GET THE ORDER*/
 app.get('/DessertOrder', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT W.FirstName, F.Name, O.TimeWeb ,O.Table_ID, P.Description, D.Quantity FROM Orders O JOIN OrderDetails D ON O.ID=D.OrderID JOIN Products P ON D.ProductID = P.ID JOIN Families F ON F.ID = O.Family_ID JOIN Waiters W ON W.ID = O.Waiter_ID WHERE P.Category = "Dessert" AND O.ID IN ( SELECT MIN(ID) FROM Orders WHERE BarPrint="0" )',
+  connection.query('SELECT O.ID, W.FirstName, F.Name, O.TimeWeb ,O.Table_ID, P.Description, D.Quantity FROM Orders O JOIN OrderDetails D ON O.ID=D.OrderID JOIN Products P ON D.ProductID = P.ID JOIN Families F ON F.ID = O.Family_ID JOIN Waiters W ON W.ID = O.Waiter_ID WHERE P.Category = "Dessert" AND O.ID IN ( SELECT MIN(ID) FROM Orders WHERE BarPrint="0" )',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -283,7 +283,7 @@ app.get('/DessertOrder', function(req, res){ //GET method to access DB and retur
 });
 
 app.get('/BarOrder', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT W.FirstName, F.Name, O.TimeWeb ,O.Table_ID, P.Description, D.Quantity FROM Orders O JOIN OrderDetails D ON O.ID=D.OrderID JOIN Products P ON D.ProductID = P.ID JOIN Families F ON F.ID = O.Family_ID JOIN Waiters W ON W.ID = O.Waiter_ID WHERE P.Category = "Bar" AND O.ID IN ( SELECT MIN(ID) FROM Orders WHERE BarPrint="0" )',
+  connection.query('SELECT O.ID, W.FirstName, F.Name, O.TimeWeb ,O.Table_ID, P.Description, D.Quantity FROM Orders O JOIN OrderDetails D ON O.ID=D.OrderID JOIN Products P ON D.ProductID = P.ID JOIN Families F ON F.ID = O.Family_ID JOIN Waiters W ON W.ID = O.Waiter_ID WHERE P.Category = "Bar" AND O.ID IN ( SELECT MIN(ID) FROM Orders WHERE BarPrint="0" )',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -296,7 +296,7 @@ app.get('/BarOrder', function(req, res){ //GET method to access DB and return re
 });
 
 app.get('/KeukenOrder', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT W.FirstName, F.Name, O.TimeWeb ,O.Table_ID, P.Description, D.Quantity FROM Orders O JOIN OrderDetails D ON O.ID=D.OrderID JOIN Products P ON D.ProductID = P.ID JOIN Families F ON F.ID = O.Family_ID JOIN Waiters W ON W.ID = O.Waiter_ID WHERE P.Category = "Keuken" AND O.ID IN ( SELECT MIN(ID) FROM Orders WHERE KeukenPrint="0" )',
+  connection.query('SELECT O.ID, W.FirstName, F.Name, O.TimeWeb ,O.Table_ID, P.Description, D.Quantity FROM Orders O JOIN OrderDetails D ON O.ID=D.OrderID JOIN Products P ON D.ProductID = P.ID JOIN Families F ON F.ID = O.Family_ID JOIN Waiters W ON W.ID = O.Waiter_ID WHERE P.Category = "Keuken" AND O.ID IN ( SELECT MIN(ID) FROM Orders WHERE KeukenPrint="0" )',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
