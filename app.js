@@ -120,7 +120,7 @@ app.get('/newFam/:name/:capacity', function(req, res){ //GET method to access DB
 });
 
 app.get('/BestelFormDrank', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT Description, ID FROM Products WHERE Category LIKE "Drank" OR Category LIKE "Opmerking"',
+  connection.query('SELECT Description, ID FROM Products WHERE Category LIKE "Bar"',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -132,7 +132,7 @@ app.get('/BestelFormDrank', function(req, res){ //GET method to access DB and re
   });
 });
 app.get('/BestelFormGerechten', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT Description, ID FROM Products WHERE Category LIKE "Voorgerecht" OR Category LIKE "Hoofdgerecht" OR Category LIKE "Drank" OR Category LIKE "Opmerking"',
+  connection.query('SELECT Description, ID FROM Products WHERE Category LIKE "Keuken" OR Category LIKE "Bar"',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -145,7 +145,7 @@ app.get('/BestelFormGerechten', function(req, res){ //GET method to access DB an
 });
 
 app.get('/BestelFormDessert', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT Description, ID FROM Products WHERE Category LIKE "Dessert" OR Category LIKE "Drank" OR Category LIKE "Opmerking"',
+  connection.query('SELECT Description, ID FROM Products WHERE Category LIKE "Dessert" OR Category LIKE "Bar"',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
