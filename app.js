@@ -345,8 +345,8 @@ app.get('/KeukenOrder', function(req, res){ //GET method to access DB and return
 });
 
 /*Change ORDER PRINT STATE*/
-app.get('/DessertOrderPrinted', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('UPDATE Orders SET DessertPrint= "1" WHERE ID = ""',
+app.get('/DessertOrderPrinted/:id', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('UPDATE Orders SET DessertPrint= "1" WHERE ID = "'+ req.params.id + '"',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -359,8 +359,8 @@ app.get('/DessertOrderPrinted', function(req, res){ //GET method to access DB an
 });
 
 
-app.get('/BarOrderPrinted', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('UPDATE Orders SET BarPrint= "1" WHERE ID = ""',
+app.get('/BarOrderPrinted/:id', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('UPDATE Orders SET BarPrint= "1" WHERE ID = "'+ req.params.id + '"',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -372,8 +372,8 @@ app.get('/BarOrderPrinted', function(req, res){ //GET method to access DB and re
   });
 });
 
-app.get('/KeukenOrderPrinted', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('UPDATE Orders SET KeukenPrint= "1" WHERE ID = ""',
+app.get('/KeukenOrderPrinted/:id', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('UPDATE Orders SET KeukenPrint= "1" WHERE ID = "'+ req.params.id + '"',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
