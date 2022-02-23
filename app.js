@@ -281,7 +281,7 @@ app.get('/NewPrintResetAfterLineAdd/:OrderID', function(req, res){ //GET method 
 });
 /*GET THE ORDER*/
 app.get('/DessertMinOrder', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT MIN(ID) FROM Orders WHERE DessertPrint = 0 ',
+  connection.query('SELECT MIN(ID) as id FROM Orders WHERE DessertPrint = 0 ',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -294,7 +294,7 @@ app.get('/DessertMinOrder', function(req, res){ //GET method to access DB and re
 });
 
 app.get('/BarMinOrder', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT MIN(ID) FROM Orders WHERE DessertPrint = 0 ',
+  connection.query('SELECT MIN(ID) as id FROM Orders WHERE DessertPrint = 0 ',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -307,7 +307,7 @@ app.get('/BarMinOrder', function(req, res){ //GET method to access DB and return
 });
 
 app.get('/KeukenMinOrder', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT MIN(ID) FROM Orders WHERE DessertPrint = 0 ',
+  connection.query('SELECT MIN(ID) as id FROM Orders WHERE DessertPrint = 0 ',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
