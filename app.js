@@ -280,6 +280,45 @@ app.get('/NewPrintResetAfterLineAdd/:OrderID', function(req, res){ //GET method 
   });
 });
 /*GET THE ORDER*/
+app.get('/DessertMinOrder', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT MIN(ID) FROM Orders WHERE DessertPrint = 0 ',
+  function(err, rows, fields){
+    if(err) throw err;
+    var data = [];
+    for(i=0;i<rows.length;i++){
+      data.push(rows[i]);
+    }
+    console.log(JSON.stringify(data));
+    res.end(JSON.stringify(data));
+  });
+});
+
+app.get('/BarMinOrder', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT MIN(ID) FROM Orders WHERE DessertPrint = 0 ',
+  function(err, rows, fields){
+    if(err) throw err;
+    var data = [];
+    for(i=0;i<rows.length;i++){
+      data.push(rows[i]);
+    }
+    console.log(JSON.stringify(data));
+    res.end(JSON.stringify(data));
+  });
+});
+
+app.get('/KeukenMinOrder', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT MIN(ID) FROM Orders WHERE DessertPrint = 0 ',
+  function(err, rows, fields){
+    if(err) throw err;
+    var data = [];
+    for(i=0;i<rows.length;i++){
+      data.push(rows[i]);
+    }
+    console.log(JSON.stringify(data));
+    res.end(JSON.stringify(data));
+  });
+});
+/*
 app.get('/DessertOrderID', function(req, res){ //GET method to access DB and return results in JSON
   connection.query('SELECT O.ID FROM Orders O WHERE O.ID IN (SELECT MIN(o.ID) from Orders o WHERE DessertPrint=0)',
   function(err, rows, fields){
@@ -315,7 +354,8 @@ app.get('/KeukenOrderID', function(req, res){ //GET method to access DB and retu
     console.log(JSON.stringify(data));
     res.end(JSON.stringify(data));
   });
-});
+});*/
+
 app.get('/DessertOrder', function(req, res){ //GET method to access DB and return results in JSON
   connection.query('SELECT O.ID, W.FirstName AS WaiterName,O.Opmerking, F.Name AS FamilyName, O.TimeWeb ,O.Table_ID, P.Description, D.Quantity FROM Orders O JOIN OrderDetails D ON O.ID=D.OrderID JOIN Products P ON D.ProductID = P.ID JOIN Families F ON F.ID = O.Family_ID JOIN Waiters W ON W.ID = O.Waiter_ID WHERE P.Category = "Dessert" AND O.ID IN ( SELECT MIN(ID) FROM Orders WHERE DessertPrint="0" )',
   function(err, rows, fields){
