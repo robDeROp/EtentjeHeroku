@@ -267,7 +267,18 @@ app.get('/NewOrderLine/:OrderID/:ProdID/:ProdQuantity', function(req, res){ //GE
     res.end(JSON.stringify(data));
   });
 });
-
+app.get('/NewPrintResetAfterLineAdd/:OrderID', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('UPDATE `Orders` SET `KeukenPrint`=0,`BarPrint`=0,`DessertPrint`= 0 WHERE Orders.ID = "'+ req.params.OrderID +'")',
+  function(err, rows, fields){
+    if(err) throw err;
+    var data = [];
+    for(i=0;i<rows.length;i++){
+      data.push(rows[i]);
+    }
+    console.log(JSON.stringify(data));
+    res.end(JSON.stringify(data));
+  });
+});
 /*GET THE ORDER*/
 app.get('/DessertOrderID', function(req, res){ //GET method to access DB and return results in JSON
   connection.query('SELECT O.ID FROM Orders O WHERE O.ID IN (SELECT MIN(o.ID) from Orders o WHERE DessertPrint=0)',
