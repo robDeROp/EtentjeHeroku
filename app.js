@@ -318,6 +318,18 @@ app.get('/KeukenMinOrder', function(req, res){ //GET method to access DB and ret
     res.end(JSON.stringify(data));
   });
 });
+app.get('/KinderMenuQuan/:name', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT P.Description, SUM(D.Quantity) as Quantity FROM OrderDetails D INNER JOIN Orders O ON O.ID = D.OrderID INNER JOIN Products P ON P.ID = D.ProductID INNER JOIN Families F ON F.ID = O.Family_ID WHERE F.Name = "'+ req.params.name +'" AND P.Description = "Kindermenu" GROUP BY P.Description ',
+  function(err, rows, fields){
+    if(err) throw err;
+    var data = [];
+    for(i=0;i<rows.length;i++){
+      data.push(rows[i]);
+    }
+    console.log(JSON.stringify(data));
+    res.end(JSON.stringify(data));
+  });
+});
 /*
 app.get('/DessertOrderID', function(req, res){ //GET method to access DB and return results in JSON
   connection.query('SELECT O.ID FROM Orders O WHERE O.ID IN (SELECT MIN(o.ID) from Orders o WHERE DessertPrint=0)',
