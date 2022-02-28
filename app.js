@@ -241,9 +241,21 @@ app.get('/OrderAndTotal/:name', function(req, res){ //GET method to access DB an
   });
 });
 
+app.get('/NewOrder/:FamID', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT COUNT(O.ID) AS Count, F.Capacity FROM Orders O INNER JOIN Families F ON O.Family_ID = F.ID WHERE O.Family_ID = "'+ req.params.FamID +'"',
+  function(err, rows, fields){
+    if(err) throw err;
+    var data = [];
+    for(i=0;i<rows.length;i++){
+      data.push(rows[i]);
+    }
+    console.log(JSON.stringify(data));
+    res.end(JSON.stringify(data));
+  });
+});
 
 app.get('/NewOrder/:WaiterID/:FamilieID/:TableID/:TimeWeb/:Opmerking', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('INSERT INTO Orders(Waiter_ID,Family_ID,Table_ID,TimeWeb,Opmerking) VALUES ("'+ req.params.WaiterID +'","'+ req.params.FamilieID +'","'+ req.params.TableID +'","'+ req.params.TimeWeb + '","'+ req.params.Opmerking +'"); SELECT COUNT(ID) AS Capacity FROM Orders WHERE Family_ID = "'+ req.params.FamilieID +'"',
+  connection.query('INSERT INTO Orders(Waiter_ID,Family_ID,Table_ID,TimeWeb,Opmerking) VALUES ("'+ req.params.WaiterID +'","'+ req.params.FamilieID +'","'+ req.params.TableID +'","'+ req.params.TimeWeb + '","'+ req.params.Opmerking +'")',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
