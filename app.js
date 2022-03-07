@@ -132,7 +132,7 @@ app.get('/BestelFormDrank', function(req, res){ //GET method to access DB and re
   });
 });
 app.get('/BestelFormGerechten', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT Description, ID FROM Products WHERE Category LIKE "Keuken" OR Category LIKE "Bar"',
+  connection.query('SELECT Description, ID FROM Products WHERE Category LIKE "Keuken"',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
