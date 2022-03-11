@@ -143,7 +143,18 @@ app.get('/BestelFormGerechten', function(req, res){ //GET method to access DB an
     res.end(JSON.stringify(data));
   });
 });
-
+app.get('/GetProductTotQuan', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT Description, ID FROM Products WHERE Category LIKE "Keuken"',
+  function(err, rows, fields){
+    if(err) throw err;
+    var data = [];
+    for(i=0;i<rows.length;i++){
+      data.push(rows[i]);
+    }
+    console.log(JSON.stringify(data));
+    res.end(JSON.stringify(data));
+  });
+});
 app.get('/BestelFormDessert', function(req, res){ //GET method to access DB and return results in JSON
   connection.query('SELECT Description, ID FROM Products WHERE Category LIKE "Dessert" OR Category LIKE "Bar"',
   function(err, rows, fields){
