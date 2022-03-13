@@ -28,6 +28,30 @@ app.get('/ReprintStatusUpdateBar/:id', function(req, res){ //GET method to acces
     res.end(JSON.stringify(data));
   });
 });
+app.get('/FamByTable/:Tid', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT Name FROM Families F INNER JOIN Orders O ON F.ID = O.Family_ID WHERE O.Table_ID = "' + req.params.Tid + '"',
+  function(err, rows, fields){
+    if(err) throw err;
+    var data = [];
+    for(i=0;i<rows.length;i++){
+      data.push(rows[i]);
+    }
+    console.log(JSON.stringify(data));
+    res.end(JSON.stringify(data));
+  });
+});
+app.get('/AllFamilies', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT Name FROM Families ',
+  function(err, rows, fields){
+    if(err) throw err;
+    var data = [];
+    for(i=0;i<rows.length;i++){
+      data.push(rows[i]);
+    }
+    console.log(JSON.stringify(data));
+    res.end(JSON.stringify(data));
+  });
+});
 app.get('/ReprintStatusUpdateKeuken/:id', function(req, res){ //GET method to access DB and return results in JSON
   connection.query('UPDATE `Orders` SET `KeukenPrint`="0" WHERE `ID`="' + req.params.id + '" ',
   function(err, rows, fields){
