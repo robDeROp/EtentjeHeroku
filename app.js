@@ -40,8 +40,8 @@ app.get('/ReprintStatusUpdateKeuken/:id', function(req, res){ //GET method to ac
     res.end(JSON.stringify(data));
   });
 });
-app.get('/BarIndex/:fid', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT COUNT(O.ID) as BarOrderIndex FROM Orders O INNER JOIN OrderDetails D on O.ID = D.OrderID INNER JOIN Products P on D.ProductID = P.ID WHERE O.Family_ID = "' + req.params.fid + '"  AND P.Category = "Bar" ',
+app.get('/BarIndex/:f', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT COUNT(O.ID) as BarOrderIndex FROM Orders O INNER JOIN OrderDetails D on O.ID = D.OrderID INNER JOIN Products P on D.ProductID = P.ID INNER JOIN Families F ON F.ID = O.Family_ID WHERE F.Name = "' + req.params.f + '"  AND P.Category = "Bar" ',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
