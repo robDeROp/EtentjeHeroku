@@ -29,7 +29,7 @@ app.get('/ReprintStatusUpdateBar/:id', function(req, res){ //GET method to acces
   });
 });
 app.get('/FamByTable/:Tid', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT Name FROM Families F INNER JOIN Orders O ON F.ID = O.Family_ID WHERE O.Table_ID = "' + req.params.Tid + '"',
+  connection.query('SELECT Distinct(Name) FROM Families F INNER JOIN Orders O ON F.ID = O.Family_ID WHERE O.Table_ID = "' + req.params.Tid + '"',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
