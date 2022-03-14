@@ -28,20 +28,20 @@ app.get('/ReprintStatusUpdateBar/:id', function(req, res){ //GET method to acces
     res.end(JSON.stringify(data));
   });
 });
-app.get('/FamByTable/:Tid', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT Distinct(Name) FROM Families F INNER JOIN Orders O ON F.ID = O.Family_ID WHERE O.Table_ID = "' + req.params.Tid + '"',
-  function(err, rows, fields){
-    if(err) throw err;
-    var data = [];
-    for(i=0;i<rows.length;i++){
-      data.push(rows[i]);
-    }
-    console.log(JSON.stringify(data));
-    res.end(JSON.stringify(data));
-  });
-});
+// app.get('/FamByTable/:Tid', function(req, res){ //GET method to access DB and return results in JSON
+//   connection.query('SELECT Distinct(Name) FROM Families F INNER JOIN Orders O ON F.ID = O.Family_ID WHERE O.Table_ID = "' + req.params.Tid + '"',
+//   function(err, rows, fields){
+//     if(err) throw err;
+//     var data = [];
+//     for(i=0;i<rows.length;i++){
+//       data.push(rows[i]);
+//     }
+//     console.log(JSON.stringify(data));
+//     res.end(JSON.stringify(data));
+//   });
+// });
 app.get('/AllFamilies', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT Name FROM Families ',
+  connection.query('SELECT F.Name, coalesce(O.Table_ID, "") as Tafel_ID FROM Families F LEFT OUTER JOIN Orders O ON O.Family_ID = F.ID GROUP BY F.Name, O.Table_ID',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
