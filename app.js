@@ -237,7 +237,7 @@ app.get('/LastOrder/:Wid', function(req, res){ //GET method to access DB and ret
 
 
 app.get('/AllTotal/:name', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT SUM(P.Price * D.Quantity) as Totaal, F.Name FROM Products P INNER JOIN OrderDetails D ON P.ID = D.ProductID INNER JOIN Orders O ON D.OrderID = O.ID INNER JOIN Families F ON F.ID = O.Family_ID WHERE F.Name = "' + req.params.name + '" AND O.Payed="0"',
+  connection.query('SELECT SUM(P.Price * D.Quantity) as Totaal, O.Table_ID F.Name FROM Products P INNER JOIN OrderDetails D ON P.ID = D.ProductID INNER JOIN Orders O ON D.OrderID = O.ID INNER JOIN Families F ON F.ID = O.Family_ID WHERE F.Name = "' + req.params.name + '" AND O.Payed="0"',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
