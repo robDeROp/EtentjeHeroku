@@ -14,6 +14,46 @@ var connection = mysql.createConnection({
   password: 'Sp15021!',
   database: 'ID362979_Etentje'
 })
+
+//STATISTIEK PAGINA
+
+app.get('/GetUnpayedFamilies', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT F.Name FROM Orders O INNER JOIN Families F ON O.Family_ID = F.ID WHERE O.Payed = 0 GROUP BY F.Name',
+  function(err, rows, fields){
+    if(err) throw err;
+    var data = [];
+    for(i=0;i<rows.length;i++){
+      data.push(rows[i]);
+    }
+    console.log(JSON.stringify(data));
+    res.end(JSON.stringify(data));
+  });
+});
+app.get('/LastTenOrders', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT O.ID as Order_ID, COALESCE(W.FirstName, "Geen Ober") as Ober, F.Name, O.Table_ID , TimeWeb, TimeWeb, (TimeDB-TimeWeb)as Delay_S FROM Orders O LEFT OUTER JOIN Waiters W ON W.ID = O.Waiter_ID INNER JOIN Families F ON F.ID=O.Family_ID ORDER BY O.ID DESC limit 0,20',
+  function(err, rows, fields){
+    if(err) throw err;
+    var data = [];
+    for(i=0;i<rows.length;i++){
+      data.push(rows[i]);
+    }
+    console.log(JSON.stringify(data));
+    res.end(JSON.stringify(data));
+  });
+});
+app.get('/BestelTotalen', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT P.Description, SUM(D.Quantity) as Hoeveelheid FROM OrderDetails D INNER JOIN Products P ON D.ProductID = P.ID GROUP BY P.Description',
+  function(err, rows, fields){
+    if(err) throw err;
+    var data = [];
+    for(i=0;i<rows.length;i++){
+      data.push(rows[i]);
+    }
+    console.log(JSON.stringify(data));
+    res.end(JSON.stringify(data));
+  });
+});
+
 //ADMIN PAGINA
 
 app.get('/ReprintStatusUpdateBar/:id', function(req, res){ //GET method to access DB and return results in JSON
@@ -128,18 +168,7 @@ app.get('/DetailsOrder/:id', function(req, res){ //GET method to access DB and r
   });
 });
 
-app.get('/LastTenOrders', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT O.ID, O.Waiter_ID, TimeWeb FROM Orders O ORDER BY O.ID DESC limit 0,10',
-  function(err, rows, fields){
-    if(err) throw err;
-    var data = [];
-    for(i=0;i<rows.length;i++){
-      data.push(rows[i]);
-    }
-    console.log(JSON.stringify(data));
-    res.end(JSON.stringify(data));
-  });
-});
+
 
 app.get('/searchFamillie/:name', function(req, res){ //GET method to access DB and return results in JSON
   connection.query('SELECT Name FROM Families WHERE Name LIKE "' + req.params.name + '"',
