@@ -291,7 +291,7 @@ app.get('/AllTotal/:name', function(req, res){ //GET method to access DB and ret
 });
 
 app.get('/Reciept/:name', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT  SUM(d.Quantity) as Quantity, p.Description, (p.Price*SUM(d.Quantity)) as Totaal FROM Products p INNER JOIN OrderDetails d ON p.ID = d.ProductID  INNER JOIN  Orders o ON o.ID = d.OrderID INNER JOIN Families F ON F.ID = o.Family_ID WHERE  F.Name = "' + req.params.name + '" AND o.Payed="0" GROUP BY p.Description',
+  connection.query('SELECT SUM(d.Quantity) as Quantity, p.Description, (p.Price*SUM(d.Quantity)) as Totaal FROM Products p INNER JOIN OrderDetails d ON p.ID = d.ProductID INNER JOIN Orders o ON o.ID = d.OrderID INNER JOIN Families F ON F.ID = o.Family_ID WHERE F.Name = "' + req.params.name + '" AND o.Payed="0" GROUP BY p.Description ORDER BY p.indexKassaExcel',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
