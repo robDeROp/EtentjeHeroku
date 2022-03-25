@@ -263,8 +263,8 @@ app.get('/LastOrder/:Wid', function(req, res){ //GET method to access DB and ret
 });
 
     //KASSA PAGINA
-  app.get('/PayOrder/:id/:method', function(req, res){ //GET method to access DB and return results in JSON
-    connection.query('UPDATE `Orders` SET `Payed`="1", `Pay_Way`  = "'+ req.params.method + '", `Payed_TimeStamp`= "'+ this.state.currentDateTime +'" WHERE ID= "' + req.params.id + '"',
+  app.get('/PayOrder/:id/:method/:PayTime', function(req, res){ //GET method to access DB and return results in JSON
+    connection.query('UPDATE `Orders` SET `Payed`="1", `Pay_Way`  = "'+ req.params.method + '", `Payed_TimeStamp` = "'+ req.params.PayTime + '" WHERE ID= "' + req.params.id + '"',
     function(err, rows, fields){
       if(err) throw err;
       var data = [];
