@@ -130,7 +130,7 @@ app.get('/BarIndex/:f', function(req, res){ //GET method to access DB and return
 });
 //BREF
 app.get('/GetFamID/:name', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT ID FROM Families WHERE Name LIKE "' + req.params.name + '"',
+  connection.query('SELECT ID FROM Families WHERE Name = "' + req.params.name + '"',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
