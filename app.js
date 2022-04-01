@@ -41,8 +41,8 @@ app.get('/LastTenOrders', function(req, res){ //GET method to access DB and retu
     res.end(JSON.stringify(data));
   });
 });
-app.get('/BestelTotalen', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT P.Description, SUM(D.Quantity) as Hoeveelheid FROM OrderDetails D INNER JOIN Products P ON D.ProductID = P.ID GROUP BY P.Description',
+app.get('/BestelTotalenFood', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT P.Description, SUM(D.Quantity) as Hoeveelheid FROM OrderDetails D INNER JOIN Products P ON D.ProductID = P.ID WHERE P.Category = "Keuken" OR P.Category = "Dessert" GROUP BY P.Description ',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -53,7 +53,78 @@ app.get('/BestelTotalen', function(req, res){ //GET method to access DB and retu
     res.end(JSON.stringify(data));
   });
 });
-
+app.get('/BestelTotalenBar', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT P.Description, SUM(D.Quantity) as Hoeveelheid FROM OrderDetails D INNER JOIN Products P ON D.ProductID = P.ID WHERE P.Category = "Bar" GROUP BY P.Description',
+  function(err, rows, fields){
+    if(err) throw err;
+    var data = [];
+    for(i=0;i<rows.length;i++){
+      data.push(rows[i]);
+    }
+    console.log(JSON.stringify(data));
+    res.end(JSON.stringify(data));
+  });
+});
+app.get('/Omzet', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT SUM(D.Quantity * P.Price) as Omzet FROM OrderDetails D INNER JOIN Products P ON D.ProductID = P.ID',
+  function(err, rows, fields){
+    if(err) throw err;
+    var data = [];
+    for(i=0;i<rows.length;i++){
+      data.push(rows[i]);
+    }
+    console.log(JSON.stringify(data));
+    res.end(JSON.stringify(data));
+  });
+});
+app.get('/UnpayedFamilies', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT COUNT(DISTINCT F.Name) AS Unpayed_Capacity FROM Families F INNER JOIN Orders O ON O.Family_ID = F.ID WHERE O.Payed = 0 ',
+  function(err, rows, fields){
+    if(err) throw err;
+    var data = [];
+    for(i=0;i<rows.length;i++){
+      data.push(rows[i]);
+    }
+    console.log(JSON.stringify(data));
+    res.end(JSON.stringify(data));
+  });
+});
+app.get('/UnpayedPeople', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT SUM(F.Capacity) AS PeopleInZaal FROM Families F WHERE F.ID IN( SELECT DISTINCT F.ID FROM Families F INNER JOIN Orders O ON O.Family_ID = F.ID WHERE O.Payed = 0 ) ',
+  function(err, rows, fields){
+    if(err) throw err;
+    var data = [];
+    for(i=0;i<rows.length;i++){
+      data.push(rows[i]);
+    }
+    console.log(JSON.stringify(data));
+    res.end(JSON.stringify(data));
+  });
+});
+app.get('/TopWaiters', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT W.FirstName, COUNT(O.ID) AS Orders, SUM(D.Quantity * P.Price) AS Omzet FROM Waiters W INNER JOIN Orders O ON W.ID = O.Waiter_ID INNER JOIN OrderDetails D ON D.OrderID = O.ID INNER JOIN Products P ON P.ID = D.ProductID GROUP BY W.FirstName ORDER BY Omzet DESC ',
+  function(err, rows, fields){
+    if(err) throw err;
+    var data = [];
+    for(i=0;i<rows.length;i++){
+      data.push(rows[i]);
+    }
+    console.log(JSON.stringify(data));
+    res.end(JSON.stringify(data));
+  });
+});
+app.get('/CashVSKaart', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT O.Pay_Way, SUM(D.Quantity*P.Price) FROM Orders O INNER JOIN OrderDetails D ON O.ID = D.OrderID INNER JOIN Products P ON P.ID = D.ProductID GROUP BY O.Pay_Way ',
+  function(err, rows, fields){
+    if(err) throw err;
+    var data = [];
+    for(i=0;i<rows.length;i++){
+      data.push(rows[i]);
+    }
+    console.log(JSON.stringify(data));
+    res.end(JSON.stringify(data));
+  });
+});
 //ADMIN PAGINA
 
 app.get('/ReprintStatusUpdateBar/:id', function(req, res){ //GET method to access DB and return results in JSON
