@@ -126,7 +126,7 @@ app.get('/TopWaiters', function(req, res){ //GET method to access DB and return 
   });
 });
 app.get('/KeukenOrdersWaiters', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT W.FirstName, COUNT(O.ID) AS Orders FROM Waiters W INNER JOIN Orders O ON W.ID = O.Waiter_ID INNER JOIN OrderDetails D ON D.OrderID = O.ID INNER JOIN Products P ON P.ID = D.ProductID WHERE P.Category = "Keuken" OR P.Category = "Dessert" GROUP BY W.FirstName ORDER BY Omzet DESC ',
+  connection.query('SELECT W.FirstName, COUNT(O.ID) AS Orders FROM Waiters W INNER JOIN Orders O ON W.ID = O.Waiter_ID INNER JOIN OrderDetails D ON D.OrderID = O.ID INNER JOIN Products P ON P.ID = D.ProductID WHERE P.Category = "Keuken" OR P.Category = "Dessert" GROUP BY W.FirstName ORDER BY SUM(D.Quantity * P.Price) DESC',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -138,7 +138,7 @@ app.get('/KeukenOrdersWaiters', function(req, res){ //GET method to access DB an
   });
 });
 app.get('/BarOrdersWaiters', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT W.FirstName, COUNT(O.ID) AS Orders FROM Waiters W INNER JOIN Orders O ON W.ID = O.Waiter_ID INNER JOIN OrderDetails D ON D.OrderID = O.ID INNER JOIN Products P ON P.ID = D.ProductID WHERE P.Category = "Bar" GROUP BY W.FirstName ORDER BY Omzet DESC ',
+  connection.query('SELECT W.FirstName, COUNT(O.ID) AS Orders FROM Waiters W INNER JOIN Orders O ON W.ID = O.Waiter_ID INNER JOIN OrderDetails D ON D.OrderID = O.ID INNER JOIN Products P ON P.ID = D.ProductID WHERE P.Category = "Bar" GROUP BY W.FirstName ORDER BY SUM(D.Quantity * P.Price) DESC',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
