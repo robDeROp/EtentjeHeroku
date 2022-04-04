@@ -17,6 +17,18 @@ var connection = mysql.createConnection({
 
 //STATISTIEK PAGINA
 
+app.get('/FamiliesInZaalAtTijd/:Tijd', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT COUNT(DISTINCT F.ID) AS AantalFamilies FROM Families F INNER JOIN Orders O ON O.Family_ID = F.ID WHERE (O.Payed_TimeStamp >= "' + req.params.Tijd + '") AND (O.TimeDB <= "' + req.params.Tijd + '")',
+  function(err, rows, fields){
+    if(err) throw err;
+    var data = [];
+    for(i=0;i<rows.length;i++){
+      data.push(rows[i]);
+    }
+    console.log(JSON.stringify(data));
+    res.end(JSON.stringify(data));
+  });
+});
 app.get('/GetUnpayedFamilies', function(req, res){ //GET method to access DB and return results in JSON
   connection.query('SELECT F.Name FROM Orders O INNER JOIN Families F ON O.Family_ID = F.ID WHERE O.Payed = 0 GROUP BY F.Name',
   function(err, rows, fields){
@@ -103,6 +115,30 @@ app.get('/UnpayedPeople', function(req, res){ //GET method to access DB and retu
 });
 app.get('/TopWaiters', function(req, res){ //GET method to access DB and return results in JSON
   connection.query('SELECT W.FirstName, COUNT(O.ID) AS Orders, SUM(D.Quantity * P.Price) AS Omzet FROM Waiters W INNER JOIN Orders O ON W.ID = O.Waiter_ID INNER JOIN OrderDetails D ON D.OrderID = O.ID INNER JOIN Products P ON P.ID = D.ProductID GROUP BY W.FirstName ORDER BY Omzet DESC ',
+  function(err, rows, fields){
+    if(err) throw err;
+    var data = [];
+    for(i=0;i<rows.length;i++){
+      data.push(rows[i]);
+    }
+    console.log(JSON.stringify(data));
+    res.end(JSON.stringify(data));
+  });
+});
+app.get('/KeukenOrdersWaiters', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT W.FirstName, COUNT(O.ID) AS Orders FROM Waiters W INNER JOIN Orders O ON W.ID = O.Waiter_ID INNER JOIN OrderDetails D ON D.OrderID = O.ID INNER JOIN Products P ON P.ID = D.ProductID WHERE P.Category = "Keuken" OR P.Category = "Dessert" GROUP BY W.FirstName ORDER BY Omzet DESC ',
+  function(err, rows, fields){
+    if(err) throw err;
+    var data = [];
+    for(i=0;i<rows.length;i++){
+      data.push(rows[i]);
+    }
+    console.log(JSON.stringify(data));
+    res.end(JSON.stringify(data));
+  });
+});
+app.get('/BarOrdersWaiters', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT W.FirstName, COUNT(O.ID) AS Orders FROM Waiters W INNER JOIN Orders O ON W.ID = O.Waiter_ID INNER JOIN OrderDetails D ON D.OrderID = O.ID INNER JOIN Products P ON P.ID = D.ProductID WHERE P.Category = "Bar" GROUP BY W.FirstName ORDER BY Omzet DESC ',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
