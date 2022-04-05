@@ -16,7 +16,18 @@ var connection = mysql.createConnection({
 })
 
 //STATISTIEK PAGINA
-
+app.get('/GetEdities', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT E.Name, E.ID, C.Name FROM Edities E INNER JOIN Company C ON E.Company_ID = C.ID',
+  function(err, rows, fields){
+    if(err) throw err;
+    var data = [];
+    for(i=0;i<rows.length;i++){
+      data.push(rows[i]);
+    }
+    console.log(JSON.stringify(data));
+    res.end(JSON.stringify(data));
+  });
+});
 app.get('/FamiliesInZaalAtTijd/:Tijd', function(req, res){ //GET method to access DB and return results in JSON
   connection.query('SELECT COUNT(DISTINCT F.ID) AS AantalFamilies FROM Families F INNER JOIN Orders O ON O.Family_ID = F.ID WHERE (O.Payed_TimeStamp >= "' + req.params.Tijd + '") AND (O.TimeDB <= "' + req.params.Tijd + '")',
   function(err, rows, fields){
