@@ -17,7 +17,7 @@ var connection = mysql.createConnection({
 
 //STATISTIEK PAGINA
 app.get('/GetEdities', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT E.Name, E.ID, C.Name FROM Edities E INNER JOIN Company C ON E.Company_ID = C.ID',
+  connection.query('SELECT E.Name as EditieName, E.ID, C.Name FROM Edities E INNER JOIN Company C ON E.Company_ID = C.ID',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
