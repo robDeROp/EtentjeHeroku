@@ -65,7 +65,7 @@ app.get('/LastTenOrders/:Editie', function(req, res){ //GET method to access DB 
   });
 });
 app.get('/BestelTotalenFood/:Editie', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT P.Description, SUM(D.Quantity) as Hoeveelheid FROM OrderDetails D INNER JOIN Products P ON D.ProductID = P.ID WHERE P.Category = "Keuken" OR P.Category = "Dessert" AND O.Editie_ID = "' + req.params.Editie + '" GROUP BY P.Description ',
+  connection.query('SELECT P.Description, SUM(D.Quantity) as Hoeveelheid FROM OrderDetails D INNER JOIN Products P ON D.ProductID = P.ID INNER JOIN Orders O ON O.ID = D.OrderID WHERE P.Category = "Keuken" OR P.Category = "Dessert" AND O.Editie_ID = "' + req.params.Editie + '" GROUP BY P.Description ',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -77,7 +77,7 @@ app.get('/BestelTotalenFood/:Editie', function(req, res){ //GET method to access
   });
 });
 app.get('/BestelTotalenBar/:Editie', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT P.Description, SUM(D.Quantity) as Hoeveelheid FROM OrderDetails D INNER JOIN Products P ON D.ProductID = P.ID WHERE P.Category = "Bar" AND O.Editie_ID = "' + req.params.Editie + '" GROUP BY P.Description',
+  connection.query('SELECT P.Description, SUM(D.Quantity) as Hoeveelheid FROM OrderDetails D INNER JOIN Products P ON D.ProductID = P.ID INNER JOIN Orders O ON O.ID = D.OrderID WHERE P.Category = "Bar" AND O.Editie_ID = "' + req.params.Editie + '" GROUP BY P.Description',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
