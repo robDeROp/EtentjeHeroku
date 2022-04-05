@@ -28,8 +28,8 @@ app.get('/GetEdities', function(req, res){ //GET method to access DB and return 
     res.end(JSON.stringify(data));
   });
 });
-app.get('/FamiliesInZaalAtTijd/:Tijd', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT COUNT(DISTINCT F.ID) AS AantalFamilies FROM Families F INNER JOIN Orders O ON O.Family_ID = F.ID WHERE (O.Payed_TimeStamp >= "' + req.params.Tijd + '") AND (O.TimeDB <= "' + req.params.Tijd + '")',
+app.get('/FamiliesInZaalAtTijd/:Tijd/:Editie', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT COUNT(DISTINCT F.ID) AS AantalFamilies FROM Families F INNER JOIN Orders O ON O.Family_ID = F.ID WHERE (O.Payed_TimeStamp >= "' + req.params.Tijd + '") AND (O.TimeDB <= "' + req.params.Tijd + '") AND O.Editie_ID = "' + req.params.Editie + '"',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -40,8 +40,8 @@ app.get('/FamiliesInZaalAtTijd/:Tijd', function(req, res){ //GET method to acces
     res.end(JSON.stringify(data));
   });
 });
-app.get('/GetUnpayedFamilies', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT F.Name FROM Orders O INNER JOIN Families F ON O.Family_ID = F.ID WHERE O.Payed = 0 GROUP BY F.Name',
+app.get('/GetUnpayedFamilies/:Editie', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT F.Name FROM Orders O INNER JOIN Families F ON O.Family_ID = F.ID WHERE O.Payed = 0 AND O.Editie_ID = "' + req.params.Editie + '" GROUP BY F.Name',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -52,8 +52,8 @@ app.get('/GetUnpayedFamilies', function(req, res){ //GET method to access DB and
     res.end(JSON.stringify(data));
   });
 });
-app.get('/LastTenOrders', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT O.ID as Order_ID, COALESCE(W.FirstName, "Geen Ober") as Ober, F.Name, O.Table_ID , TimeWeb, TimeWeb, (TimeDB-TimeWeb)as Delay_S FROM Orders O LEFT OUTER JOIN Waiters W ON W.ID = O.Waiter_ID INNER JOIN Families F ON F.ID=O.Family_ID ORDER BY O.ID DESC limit 0,20',
+app.get('/LastTenOrders/:Editie', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT O.ID as Order_ID, COALESCE(W.FirstName, "Geen Ober") as Ober, F.Name, O.Table_ID , TimeWeb, TimeWeb, (TimeDB-TimeWeb)as Delay_S FROM Orders O LEFT OUTER JOIN Waiters W ON W.ID = O.Waiter_ID INNER JOIN Families F ON F.ID=O.Family_ID WHERE O.Editie_ID = "' + req.params.Editie + '" ORDER BY O.ID DESC limit 0,20',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -64,8 +64,8 @@ app.get('/LastTenOrders', function(req, res){ //GET method to access DB and retu
     res.end(JSON.stringify(data));
   });
 });
-app.get('/BestelTotalenFood', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT P.Description, SUM(D.Quantity) as Hoeveelheid FROM OrderDetails D INNER JOIN Products P ON D.ProductID = P.ID WHERE P.Category = "Keuken" OR P.Category = "Dessert" GROUP BY P.Description ',
+app.get('/BestelTotalenFood/:Editie', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT P.Description, SUM(D.Quantity) as Hoeveelheid FROM OrderDetails D INNER JOIN Products P ON D.ProductID = P.ID WHERE P.Category = "Keuken" OR P.Category = "Dessert" AND O.Editie_ID = "' + req.params.Editie + '" GROUP BY P.Description ',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -76,8 +76,8 @@ app.get('/BestelTotalenFood', function(req, res){ //GET method to access DB and 
     res.end(JSON.stringify(data));
   });
 });
-app.get('/BestelTotalenBar', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT P.Description, SUM(D.Quantity) as Hoeveelheid FROM OrderDetails D INNER JOIN Products P ON D.ProductID = P.ID WHERE P.Category = "Bar" GROUP BY P.Description',
+app.get('/BestelTotalenBar/:Editie', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT P.Description, SUM(D.Quantity) as Hoeveelheid FROM OrderDetails D INNER JOIN Products P ON D.ProductID = P.ID WHERE P.Category = "Bar" AND O.Editie_ID = "' + req.params.Editie + '" GROUP BY P.Description',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -88,8 +88,8 @@ app.get('/BestelTotalenBar', function(req, res){ //GET method to access DB and r
     res.end(JSON.stringify(data));
   });
 });
-app.get('/Omzet', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT SUM(D.Quantity * P.Price) as Omzet FROM OrderDetails D INNER JOIN Products P ON D.ProductID = P.ID',
+app.get('/Omzet/:Editie', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT SUM(D.Quantity * P.Price) as Omzet FROM OrderDetails D INNER JOIN Products P ON D.ProductID = P.ID INNER JOIN Orders O ON O.ID = D.OrderID WHERE O.Editie_ID = "' + req.params.Editie + '"',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -100,8 +100,8 @@ app.get('/Omzet', function(req, res){ //GET method to access DB and return resul
     res.end(JSON.stringify(data));
   });
 });
-app.get('/UnpayedFamilies', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT COUNT(DISTINCT F.Name) AS Unpayed_Capacity FROM Families F INNER JOIN Orders O ON O.Family_ID = F.ID WHERE O.Payed = 0 ',
+app.get('/UnpayedFamilies/:Editie', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT COUNT(DISTINCT F.Name) AS Unpayed_Capacity FROM Families F INNER JOIN Orders O ON O.Family_ID = F.ID WHERE O.Payed = 0 AND O.Editie_ID = "' + req.params.Editie + '"',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -112,8 +112,8 @@ app.get('/UnpayedFamilies', function(req, res){ //GET method to access DB and re
     res.end(JSON.stringify(data));
   });
 });
-app.get('/UnpayedPeople', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT SUM(F.Capacity) AS PeopleInZaal FROM Families F WHERE F.ID IN( SELECT DISTINCT F.ID FROM Families F INNER JOIN Orders O ON O.Family_ID = F.ID WHERE O.Payed = 0 ) ',
+app.get('/UnpayedPeople/:Editie', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT SUM(F.Capacity) AS PeopleInZaal FROM Families F WHERE F.ID IN( SELECT DISTINCT F.ID FROM Families F INNER JOIN Orders O ON O.Family_ID = F.ID WHERE O.Payed = 0 AND O.Editie_ID = "' + req.params.Editie + '") ',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -124,8 +124,8 @@ app.get('/UnpayedPeople', function(req, res){ //GET method to access DB and retu
     res.end(JSON.stringify(data));
   });
 });
-app.get('/TopWaiters', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT W.FirstName, COUNT(O.ID) AS Orders, SUM(D.Quantity * P.Price) AS Omzet FROM Waiters W INNER JOIN Orders O ON W.ID = O.Waiter_ID INNER JOIN OrderDetails D ON D.OrderID = O.ID INNER JOIN Products P ON P.ID = D.ProductID GROUP BY W.FirstName ORDER BY Omzet DESC ',
+app.get('/TopWaiters/:Editie', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT W.FirstName, COUNT(O.ID) AS Orders, SUM(D.Quantity * P.Price) AS Omzet FROM Waiters W INNER JOIN Orders O ON W.ID = O.Waiter_ID INNER JOIN OrderDetails D ON D.OrderID = O.ID INNER JOIN Products P ON P.ID = D.ProductID WHERE O.Editie_ID = "' + req.params.Editie + '" GROUP BY W.FirstName ORDER BY Omzet DESC ',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -136,8 +136,8 @@ app.get('/TopWaiters', function(req, res){ //GET method to access DB and return 
     res.end(JSON.stringify(data));
   });
 });
-app.get('/KeukenOrdersWaiters', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT W.FirstName, COUNT(O.ID) AS Orders FROM Waiters W INNER JOIN Orders O ON W.ID = O.Waiter_ID INNER JOIN OrderDetails D ON D.OrderID = O.ID INNER JOIN Products P ON P.ID = D.ProductID WHERE P.Category = "Keuken" OR P.Category = "Dessert" GROUP BY W.FirstName ORDER BY SUM(D.Quantity * P.Price) DESC',
+app.get('/KeukenOrdersWaiters/:Editie', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT W.FirstName, COUNT(O.ID) AS Orders FROM Waiters W INNER JOIN Orders O ON W.ID = O.Waiter_ID INNER JOIN OrderDetails D ON D.OrderID = O.ID INNER JOIN Products P ON P.ID = D.ProductID WHERE P.Category = "Keuken" OR P.Category = "Dessert" AND O.Editie_ID = "' + req.params.Editie + '" GROUP BY W.FirstName ORDER BY SUM(D.Quantity * P.Price) DESC',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -148,8 +148,8 @@ app.get('/KeukenOrdersWaiters', function(req, res){ //GET method to access DB an
     res.end(JSON.stringify(data));
   });
 });
-app.get('/BarOrdersWaiters', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT W.FirstName, COUNT(O.ID) AS Orders FROM Waiters W INNER JOIN Orders O ON W.ID = O.Waiter_ID INNER JOIN OrderDetails D ON D.OrderID = O.ID INNER JOIN Products P ON P.ID = D.ProductID WHERE P.Category = "Bar" GROUP BY W.FirstName ORDER BY SUM(D.Quantity * P.Price) DESC',
+app.get('/BarOrdersWaiters/:Editie', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT W.FirstName, COUNT(O.ID) AS Orders FROM Waiters W INNER JOIN Orders O ON W.ID = O.Waiter_ID INNER JOIN OrderDetails D ON D.OrderID = O.ID INNER JOIN Products P ON P.ID = D.ProductID WHERE P.Category = "Bar" AND O.Editie_ID = "' + req.params.Editie + '" GROUP BY W.FirstName ORDER BY SUM(D.Quantity * P.Price) DESC',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -160,8 +160,8 @@ app.get('/BarOrdersWaiters', function(req, res){ //GET method to access DB and r
     res.end(JSON.stringify(data));
   });
 });
-app.get('/CashVSKaart', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT O.Pay_Way, SUM(D.Quantity*P.Price) FROM Orders O INNER JOIN OrderDetails D ON O.ID = D.OrderID INNER JOIN Products P ON P.ID = D.ProductID GROUP BY O.Pay_Way ',
+app.get('/CashVSKaart/:Editie', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT O.Pay_Way, SUM(D.Quantity*P.Price) FROM Orders O INNER JOIN OrderDetails D ON O.ID = D.OrderID INNER JOIN Products P ON P.ID = D.ProductID WHERE O.Editie_ID = "' + req.params.Editie + '" GROUP BY O.Pay_Way ',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
