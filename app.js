@@ -187,7 +187,7 @@ app.get('/BarOrdersWaiters/:Editie', function(req, res){ //GET method to access 
   });
 });
 app.get('/CashVSKaart/:Editie', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT O.Pay_Way, SUM(D.Quantity*P.Price) FROM Orders O INNER JOIN OrderDetails D ON O.ID = D.OrderID INNER JOIN Products P ON P.ID = D.ProductID WHERE O.Editie_ID = "' + req.params.Editie + '" GROUP BY O.Pay_Way ',
+  connection.query('SELECT O.Pay_Way, SUM(D.Quantity*P.Price) as Quan FROM Orders O INNER JOIN OrderDetails D ON O.ID = D.OrderID INNER JOIN Products P ON P.ID = D.ProductID WHERE O.Editie_ID = "' + req.params.Editie + '" GROUP BY O.Pay_Way ',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
