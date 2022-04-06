@@ -16,8 +16,8 @@ var connection = mysql.createConnection({
 })
 
 //STATISTIEK PAGINA
-app.get('/GetAllOrderTimeStamp', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT O.TimeDB, O.Payed_TimeStamp FROM Orders O',
+app.get('/GetAllOrderTimeStamp/:Editie', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT O.TimeDB, O.Payed_TimeStamp FROM Orders O WHERE Editie_ID = "' + req.params.Editie + '"',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
