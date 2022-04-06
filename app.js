@@ -16,6 +16,18 @@ var connection = mysql.createConnection({
 })
 
 //STATISTIEK PAGINA
+app.get('/GetAllOrderTimeStamp', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT O.TimeDB, O.Payed_TimeStamp FROM Orders O',
+  function(err, rows, fields){
+    if(err) throw err;
+    var data = [];
+    for(i=0;i<rows.length;i++){
+      data.push(rows[i]);
+    }
+    console.log(JSON.stringify(data));
+    res.end(JSON.stringify(data));
+  });
+});
 app.get('/GetEdities', function(req, res){ //GET method to access DB and return results in JSON
   connection.query('SELECT E.Name as EditieName, E.ID, C.Name FROM Edities E INNER JOIN Company C ON E.Company_ID = C.ID',
   function(err, rows, fields){
