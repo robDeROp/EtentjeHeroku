@@ -112,6 +112,19 @@ app.get('/FVoorEnHoofdEnDessert', function(req, res){ //GET method to access DB 
     res.end(JSON.stringify(data));
   });
 });
+//DrukteStatistiek
+app.get('/DruktePerTimeStamp/:Editie', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT E.TimeStamp, Count(O.ID) AS CountOfID FROM EditieTimeStamps E, Orders O WHERE (((O.TimeDB<=E.TimeStamp)=True) AND ((O.Payed_TimeStamp>E.TimeStamp)=True)) AND E.Editie = "' + req.params.Editie + '" AND O.Editie_ID = "' + req.params.Editie + '" GROUP BY E.TimeStamp, O.TimeDB<= E.TimeStamp, O.Payed_TimeStamp>E.TimeStamp ',
+  function(err, rows, fields){
+    if(err) throw err;
+    var data = [];
+    for(i=0;i<rows.length;i++){
+      data.push(rows[i]);
+    }
+    console.log(JSON.stringify(data));
+    res.end(JSON.stringify(data));
+  });
+});
 //STATISTIEK PAGINA
 app.get('/GetAllOrderTimeStamp/:Editie', function(req, res){ //GET method to access DB and return results in JSON
   connection.query('SELECT O.TimeDB, O.Payed_TimeStamp FROM Orders O WHERE Editie_ID = "' + req.params.Editie + '"',
