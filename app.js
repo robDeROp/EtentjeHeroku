@@ -140,7 +140,7 @@ app.get('/GetAllOrderTimeStamp/:Editie', function(req, res){ //GET method to acc
 });
 
 app.get('/UpdateTimeStamps/:Editie/:TS', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('INSERT INTO `EditieTImeStamps`(`Editie`, `TimeStamp`) VALUES ("' + req.params.Editie + '","' + req.params.TS + '")',
+  connection.query('INSERT INTO `EditieTimeStamps`(`Editie`, `TimeStamp`) VALUES ("' + req.params.Editie + '","' + req.params.TS + '")',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
