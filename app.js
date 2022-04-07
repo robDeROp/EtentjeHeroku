@@ -14,7 +14,91 @@ var connection = mysql.createConnection({
   password: 'Sp15021!',
   database: 'ID362979_Etentje'
 })
-
+//Procenten
+app.get('/FVoorgerechten ', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT COUNT(DISTINCT(F.Name)) as Aantal, COUNT(DISTINCT(F.Name))*100/COUNT(F.ID) as Procent FROM Families F INNER JOIN Orders O ON O.Family_ID=F.ID INNER JOIN OrderDetails D ON D.OrderID = O.ID INNER JOIN Products P ON P.ID = D.ProductID WHERE P.newCategory = "Voorgerecht"',
+  function(err, rows, fields){
+    if(err) throw err;
+    var data = [];
+    for(i=0;i<rows.length;i++){
+      data.push(rows[i]);
+    }
+    console.log(JSON.stringify(data));
+    res.end(JSON.stringify(data));
+  });
+});
+app.get('/FHoofdgerechten ', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT COUNT(DISTINCT(F.Name)) as Aantal, COUNT(DISTINCT(F.Name))*100/COUNT(F.ID) as Procent FROM Families F INNER JOIN Orders O ON O.Family_ID=F.ID INNER JOIN OrderDetails D ON D.OrderID = O.ID INNER JOIN Products P ON P.ID = D.ProductID WHERE P.newCategory = "Hoofdgerecht"',
+  function(err, rows, fields){
+    if(err) throw err;
+    var data = [];
+    for(i=0;i<rows.length;i++){
+      data.push(rows[i]);
+    }
+    console.log(JSON.stringify(data));
+    res.end(JSON.stringify(data));
+  });
+});
+app.get('/FDessert ', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT COUNT(DISTINCT(F.Name)) as Aantal, COUNT(DISTINCT(F.Name))*100/COUNT(F.ID) as Procent FROM Families F INNER JOIN Orders O ON O.Family_ID=F.ID INNER JOIN OrderDetails D ON D.OrderID = O.ID INNER JOIN Products P ON P.ID = D.ProductID WHERE P.newCategory = "Dessert"',
+  function(err, rows, fields){
+    if(err) throw err;
+    var data = [];
+    for(i=0;i<rows.length;i++){
+      data.push(rows[i]);
+    }
+    console.log(JSON.stringify(data));
+    res.end(JSON.stringify(data));
+  });
+});
+app.get('/FVoorEnHoofd ', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT COUNT(DISTINCT(F.Name)) as Aantal FROM Families F WHERE F.Name IN( SELECT F.Name FROM Families F INNER JOIN Orders O ON O.Family_ID=F.ID INNER JOIN OrderDetails D ON D.OrderID = O.ID INNER JOIN Products P ON P.ID = D.ProductID WHERE P.newCategory = "Voorgerecht") AND F.Name IN( SELECT F.Name FROM Families F INNER JOIN Orders O ON O.Family_ID=F.ID INNER JOIN OrderDetails D ON D.OrderID = O.ID INNER JOIN Products P ON P.ID = D.ProductID WHERE P.newCategory = "Hoofdgerecht")',
+  function(err, rows, fields){
+    if(err) throw err;
+    var data = [];
+    for(i=0;i<rows.length;i++){
+      data.push(rows[i]);
+    }
+    console.log(JSON.stringify(data));
+    res.end(JSON.stringify(data));
+  });
+});
+app.get('/FHoofdEnDessert ', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT COUNT(DISTINCT(F.Name)) as Aantal FROM Families F WHERE F.Name IN( SELECT F.Name FROM Families F INNER JOIN Orders O ON O.Family_ID=F.ID INNER JOIN OrderDetails D ON D.OrderID = O.ID INNER JOIN Products P ON P.ID = D.ProductID WHERE P.newCategory = "Hoofdgerecht") AND F.Name IN( SELECT F.Name FROM Families F INNER JOIN Orders O ON O.Family_ID=F.ID INNER JOIN OrderDetails D ON D.OrderID = O.ID INNER JOIN Products P ON P.ID = D.ProductID WHERE P.newCategory = "Dessert")',
+  function(err, rows, fields){
+    if(err) throw err;
+    var data = [];
+    for(i=0;i<rows.length;i++){
+      data.push(rows[i]);
+    }
+    console.log(JSON.stringify(data));
+    res.end(JSON.stringify(data));
+  });
+});
+app.get('/FVoorEnDessert ', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT COUNT(DISTINCT(F.Name)) as Aantal FROM Families F WHERE F.Name IN( SELECT F.Name FROM Families F INNER JOIN Orders O ON O.Family_ID=F.ID INNER JOIN OrderDetails D ON D.OrderID = O.ID INNER JOIN Products P ON P.ID = D.ProductID WHERE P.newCategory = "Voorgerecht") AND F.Name IN( SELECT F.Name FROM Families F INNER JOIN Orders O ON O.Family_ID=F.ID INNER JOIN OrderDetails D ON D.OrderID = O.ID INNER JOIN Products P ON P.ID = D.ProductID WHERE P.newCategory = "Dessert")',
+  function(err, rows, fields){
+    if(err) throw err;
+    var data = [];
+    for(i=0;i<rows.length;i++){
+      data.push(rows[i]);
+    }
+    console.log(JSON.stringify(data));
+    res.end(JSON.stringify(data));
+  });
+});
+app.get('/FVoorEnHoofdEnDessert ', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT COUNT(DISTINCT(F.Name)) as Aantal FROM Families F WHERE F.Name IN( SELECT F.Name FROM Families F INNER JOIN Orders O ON O.Family_ID=F.ID INNER JOIN OrderDetails D ON D.OrderID = O.ID INNER JOIN Products P ON P.ID = D.ProductID WHERE P.newCategory = "Voorgerecht") AND F.Name IN( SELECT F.Name FROM Families F INNER JOIN Orders O ON O.Family_ID=F.ID INNER JOIN OrderDetails D ON D.OrderID = O.ID INNER JOIN Products P ON P.ID = D.ProductID WHERE P.newCategory = "Hoofdgerecht") AND F.Name IN( SELECT F.Name FROM Families F INNER JOIN Orders O ON O.Family_ID=F.ID INNER JOIN OrderDetails D ON D.OrderID = O.ID INNER JOIN Products P ON P.ID = D.ProductID WHERE P.newCategory = "Dessert") ',
+  function(err, rows, fields){
+    if(err) throw err;
+    var data = [];
+    for(i=0;i<rows.length;i++){
+      data.push(rows[i]);
+    }
+    console.log(JSON.stringify(data));
+    res.end(JSON.stringify(data));
+  });
+});
 //STATISTIEK PAGINA
 app.get('/GetAllOrderTimeStamp/:Editie', function(req, res){ //GET method to access DB and return results in JSON
   connection.query('SELECT O.TimeDB, O.Payed_TimeStamp FROM Orders O WHERE Editie_ID = "' + req.params.Editie + '"',
