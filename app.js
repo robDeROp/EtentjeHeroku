@@ -15,6 +15,19 @@ var connection = mysql.createConnection({
   database: 'ID362979_Etentje'
 })
 //Procenten
+
+app.get('/TotaalFamillies ', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT COUNT(F.Name) as Aantal From Families F',
+  function(err, rows, fields){
+    if(err) throw err;
+    var data = [];
+    for(i=0;i<rows.length;i++){
+      data.push(rows[i]);
+    }
+    console.log(JSON.stringify(data));
+    res.end(JSON.stringify(data));
+  });
+});
 app.get('/FVoorgerechten ', function(req, res){ //GET method to access DB and return results in JSON
   connection.query('SELECT COUNT(DISTINCT(F.Name)) as Aantal, COUNT(DISTINCT(F.Name))*100/COUNT(F.ID) as Procent FROM Families F INNER JOIN Orders O ON O.Family_ID=F.ID INNER JOIN OrderDetails D ON D.OrderID = O.ID INNER JOIN Products P ON P.ID = D.ProductID WHERE P.newCategory = "Voorgerecht"',
   function(err, rows, fields){
