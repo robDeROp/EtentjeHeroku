@@ -29,7 +29,7 @@ app.get('/TotaalFamillies ', function(req, res){ //GET method to access DB and r
   });
 });
 app.get('/FVoorgerechten ', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT COUNT(DISTINCT(F.Name)) as Aantal, COUNT(DISTINCT(F.Name))*100/COUNT(F.ID) as Procent FROM Families F INNER JOIN Orders O ON O.Family_ID=F.ID INNER JOIN OrderDetails D ON D.OrderID = O.ID INNER JOIN Products P ON P.ID = D.ProductID WHERE P.newCategory = "Voorgerecht"',
+  connection.query('SELECT COUNT(DISTINCT(F.Name)) as Aantal FROM Families F INNER JOIN Orders O ON O.Family_ID=F.ID INNER JOIN OrderDetails D ON D.OrderID = O.ID INNER JOIN Products P ON P.ID = D.ProductID WHERE P.newCategory = "Voorgerecht"',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -41,7 +41,7 @@ app.get('/FVoorgerechten ', function(req, res){ //GET method to access DB and re
   });
 });
 app.get('/FHoofdgerechten ', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT COUNT(DISTINCT(F.Name)) as Aantal, COUNT(DISTINCT(F.Name))*100/COUNT(F.ID) as Procent FROM Families F INNER JOIN Orders O ON O.Family_ID=F.ID INNER JOIN OrderDetails D ON D.OrderID = O.ID INNER JOIN Products P ON P.ID = D.ProductID WHERE P.newCategory = "Hoofdgerecht"',
+  connection.query('SELECT COUNT(DISTINCT(F.Name)) as Aantal FROM Families F INNER JOIN Orders O ON O.Family_ID=F.ID INNER JOIN OrderDetails D ON D.OrderID = O.ID INNER JOIN Products P ON P.ID = D.ProductID WHERE P.newCategory = "Hoofdgerecht"',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -53,7 +53,7 @@ app.get('/FHoofdgerechten ', function(req, res){ //GET method to access DB and r
   });
 });
 app.get('/FDessert ', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT COUNT(DISTINCT(F.Name)) as Aantal, COUNT(DISTINCT(F.Name))*100/COUNT(F.ID) as Procent FROM Families F INNER JOIN Orders O ON O.Family_ID=F.ID INNER JOIN OrderDetails D ON D.OrderID = O.ID INNER JOIN Products P ON P.ID = D.ProductID WHERE P.newCategory = "Dessert"',
+  connection.query('SELECT COUNT(DISTINCT(F.Name)) as Aantal FROM Families F INNER JOIN Orders O ON O.Family_ID=F.ID INNER JOIN OrderDetails D ON D.OrderID = O.ID INNER JOIN Products P ON P.ID = D.ProductID WHERE P.newCategory = "Dessert"',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
