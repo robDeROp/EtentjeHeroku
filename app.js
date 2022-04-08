@@ -139,6 +139,18 @@ app.get('/GetAllOrderTimeStamp/:Editie', function(req, res){ //GET method to acc
   });
 });
 
+app.get('/ClearTimeStamps/:Editie', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('DELETE FROM `EditieTimeStamps` WHERE `Editie` = "' + req.params.Editie + '"',
+  function(err, rows, fields){
+    if(err) throw err;
+    var data = [];
+    for(i=0;i<rows.length;i++){
+      data.push(rows[i]);
+    }
+    console.log(JSON.stringify(data));
+    res.end(JSON.stringify(data));
+  });
+});
 app.get('/UpdateTimeStamps/:Editie/:TS', function(req, res){ //GET method to access DB and return results in JSON
   connection.query('INSERT INTO `EditieTimeStamps`(`Editie`, `TimeStamp`) VALUES ("' + req.params.Editie + '","' + req.params.TS + '")',
   function(err, rows, fields){
@@ -151,7 +163,6 @@ app.get('/UpdateTimeStamps/:Editie/:TS', function(req, res){ //GET method to acc
     res.end(JSON.stringify(data));
   });
 });
-
 app.get('/GetEdities', function(req, res){ //GET method to access DB and return results in JSON
   connection.query('SELECT E.Name as EditieName, E.ID, C.Name FROM Edities E INNER JOIN Company C ON E.Company_ID = C.ID',
   function(err, rows, fields){
