@@ -14,6 +14,43 @@ var connection = mysql.createConnection({
   password: 'Sp15021!',
   database: 'ID362979_Etentje'
 })
+
+app.get('/getMenu/:Editie', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT Description From Products WHERE Editie_ID = "' + req.params.Editie + '"',
+  function(err, rows, fields){
+    if(err) throw err;
+    var data = [];
+    for(i=0;i<rows.length;i++){
+      data.push(rows[i]);
+    }
+    console.log(JSON.stringify(data));
+    res.end(JSON.stringify(data));
+  });
+});
+app.get('/getProductSales/:Editie/:Product', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT Description From Products WHERE Editie_ID = "' + req.params.Editie + '"',
+  function(err, rows, fields){
+    if(err) throw err;
+    var data = [];
+    for(i=0;i<rows.length;i++){
+      data.push(rows[i]);
+    }
+    console.log(JSON.stringify(data));
+    res.end(JSON.stringify(data));
+  });
+});
+app.get('/getMenu', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT Description From Products',
+  function(err, rows, fields){
+    if(err) throw err;
+    var data = [];
+    for(i=0;i<rows.length;i++){
+      data.push(rows[i]);
+    }
+    console.log(JSON.stringify(data));
+    res.end(JSON.stringify(data));
+  });
+});
 //Procenten
 
 app.get('/TotaalFamillies', function(req, res){ //GET method to access DB and return results in JSON
