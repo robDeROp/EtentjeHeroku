@@ -28,7 +28,7 @@ app.get('/getMenu/:Editie', function(req, res){ //GET method to access DB and re
   });
 });
 app.get('/getProductSales/:Editie/:Product', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT W.FirstName, SUM(D.Quantity) as Aantal FROM Waiters W INNER JOIN Orders O ON W.ID = O.Waiter_ID INNER JOIN OrderDetails D ON D.OrderID = O.ID INNER JOIN Products P ON P.ID = D.ProductID WHERE P.Description = "' + req.params.Product + '" AND Editie_ID = "' + req.params.Editie + '" GROUP BY W.FirstName',
+  connection.query('SELECT W.FirstName, SUM(D.Quantity) as Aantal FROM Waiters W INNER JOIN Orders O ON W.ID = O.Waiter_ID INNER JOIN OrderDetails D ON D.OrderID = O.ID INNER JOIN Products P ON P.ID = D.ProductID WHERE P.ID = "' + req.params.Product + '" AND Editie_ID = "' + req.params.Editie + '" GROUP BY W.FirstName',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
