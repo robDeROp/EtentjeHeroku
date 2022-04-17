@@ -53,7 +53,7 @@ app.get('/getMenu/:Editie', function(req, res){ //GET method to access DB and re
 });
 //Procenten
 
-app.get('/TotaalFamillies', function(req, res){ //GET method to access DB and return results in JSON
+app.get('/TotaalFamillies/:Editie', function(req, res){ //GET method to access DB and return results in JSON
   connection.query('SELECT COUNT(F.Name) as Aantal From Families F',
   function(err, rows, fields){
     if(err) throw err;
@@ -65,8 +65,8 @@ app.get('/TotaalFamillies', function(req, res){ //GET method to access DB and re
     res.end(JSON.stringify(data));
   });
 });
-app.get('/FVoorgerechten', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT COUNT(DISTINCT(F.Name)) as Aantal FROM Families F INNER JOIN Orders O ON O.Family_ID=F.ID INNER JOIN OrderDetails D ON D.OrderID = O.ID INNER JOIN Products P ON P.ID = D.ProductID WHERE P.newCategory = "Voorgerecht"',
+app.get('/FVoorgerechten/:Editie', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT COUNT(DISTINCT(F.Name)) as Aantal FROM Families F INNER JOIN Orders O ON O.Family_ID=F.ID INNER JOIN OrderDetails D ON D.OrderID = O.ID INNER JOIN Products P ON P.ID = D.ProductID WHERE P.newCategory = "Voorgerecht" AND O.Editie_ID = "' + req.params.Editie +'"',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -77,8 +77,8 @@ app.get('/FVoorgerechten', function(req, res){ //GET method to access DB and ret
     res.end(JSON.stringify(data));
   });
 });
-app.get('/FHoofdgerechten', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT COUNT(DISTINCT(F.Name)) as Aantal FROM Families F INNER JOIN Orders O ON O.Family_ID=F.ID INNER JOIN OrderDetails D ON D.OrderID = O.ID INNER JOIN Products P ON P.ID = D.ProductID WHERE P.newCategory = "Hoofdgerecht"',
+app.get('/FHoofdgerechten/:Editie', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT COUNT(DISTINCT(F.Name)) as Aantal FROM Families F INNER JOIN Orders O ON O.Family_ID=F.ID INNER JOIN OrderDetails D ON D.OrderID = O.ID INNER JOIN Products P ON P.ID = D.ProductID WHERE P.newCategory = "Hoofdgerecht" AND O.Editie_ID = "' + req.params.Editie +'"',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -89,8 +89,8 @@ app.get('/FHoofdgerechten', function(req, res){ //GET method to access DB and re
     res.end(JSON.stringify(data));
   });
 });
-app.get('/FDessert', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT COUNT(DISTINCT(F.Name)) as Aantal FROM Families F INNER JOIN Orders O ON O.Family_ID=F.ID INNER JOIN OrderDetails D ON D.OrderID = O.ID INNER JOIN Products P ON P.ID = D.ProductID WHERE P.newCategory = "Dessert"',
+app.get('/FDessert/:Editie', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT COUNT(DISTINCT(F.Name)) as Aantal FROM Families F INNER JOIN Orders O ON O.Family_ID=F.ID INNER JOIN OrderDetails D ON D.OrderID = O.ID INNER JOIN Products P ON P.ID = D.ProductID WHERE P.newCategory = "Dessert" AND O.Editie_ID = "' + req.params.Editie +'"',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -101,8 +101,8 @@ app.get('/FDessert', function(req, res){ //GET method to access DB and return re
     res.end(JSON.stringify(data));
   });
 });
-app.get('/FVoorEnHoofd', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT COUNT(DISTINCT(F.Name)) as Aantal FROM Families F WHERE F.Name IN( SELECT F.Name FROM Families F INNER JOIN Orders O ON O.Family_ID=F.ID INNER JOIN OrderDetails D ON D.OrderID = O.ID INNER JOIN Products P ON P.ID = D.ProductID WHERE P.newCategory = "Voorgerecht") AND F.Name IN( SELECT F.Name FROM Families F INNER JOIN Orders O ON O.Family_ID=F.ID INNER JOIN OrderDetails D ON D.OrderID = O.ID INNER JOIN Products P ON P.ID = D.ProductID WHERE P.newCategory = "Hoofdgerecht")',
+app.get('/FVoorEnHoofd/:Editie', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT COUNT(DISTINCT(F.Name)) as Aantal FROM Families F WHERE F.Name IN( SELECT F.Name FROM Families F INNER JOIN Orders O ON O.Family_ID=F.ID INNER JOIN OrderDetails D ON D.OrderID = O.ID INNER JOIN Products P ON P.ID = D.ProductID WHERE P.newCategory = "Voorgerecht"  AND O.Editie_ID = "' + req.params.Editie +'") AND F.Name IN( SELECT F.Name FROM Families F INNER JOIN Orders O ON O.Family_ID=F.ID INNER JOIN OrderDetails D ON D.OrderID = O.ID INNER JOIN Products P ON P.ID = D.ProductID WHERE P.newCategory = "Hoofdgerecht"  AND O.Editie_ID = "' + req.params.Editie +'")',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -113,8 +113,8 @@ app.get('/FVoorEnHoofd', function(req, res){ //GET method to access DB and retur
     res.end(JSON.stringify(data));
   });
 });
-app.get('/FHoofdEnDessert', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT COUNT(DISTINCT(F.Name)) as Aantal FROM Families F WHERE F.Name IN( SELECT F.Name FROM Families F INNER JOIN Orders O ON O.Family_ID=F.ID INNER JOIN OrderDetails D ON D.OrderID = O.ID INNER JOIN Products P ON P.ID = D.ProductID WHERE P.newCategory = "Hoofdgerecht") AND F.Name IN( SELECT F.Name FROM Families F INNER JOIN Orders O ON O.Family_ID=F.ID INNER JOIN OrderDetails D ON D.OrderID = O.ID INNER JOIN Products P ON P.ID = D.ProductID WHERE P.newCategory = "Dessert")',
+app.get('/FHoofdEnDessert/:Editie', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT COUNT(DISTINCT(F.Name)) as Aantal FROM Families F WHERE F.Name IN( SELECT F.Name FROM Families F INNER JOIN Orders O ON O.Family_ID=F.ID INNER JOIN OrderDetails D ON D.OrderID = O.ID INNER JOIN Products P ON P.ID = D.ProductID WHERE P.newCategory = "Hoofdgerecht" AND O.Editie_ID = "' + req.params.Editie +'") AND F.Name IN( SELECT F.Name FROM Families F INNER JOIN Orders O ON O.Family_ID=F.ID INNER JOIN OrderDetails D ON D.OrderID = O.ID INNER JOIN Products P ON P.ID = D.ProductID WHERE P.newCategory = "Dessert" AND O.Editie_ID = "' + req.params.Editie +'")',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -125,8 +125,8 @@ app.get('/FHoofdEnDessert', function(req, res){ //GET method to access DB and re
     res.end(JSON.stringify(data));
   });
 });
-app.get('/FVoorEnDessert', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT COUNT(DISTINCT(F.Name)) as Aantal FROM Families F WHERE F.Name IN( SELECT F.Name FROM Families F INNER JOIN Orders O ON O.Family_ID=F.ID INNER JOIN OrderDetails D ON D.OrderID = O.ID INNER JOIN Products P ON P.ID = D.ProductID WHERE P.newCategory = "Voorgerecht") AND F.Name IN( SELECT F.Name FROM Families F INNER JOIN Orders O ON O.Family_ID=F.ID INNER JOIN OrderDetails D ON D.OrderID = O.ID INNER JOIN Products P ON P.ID = D.ProductID WHERE P.newCategory = "Dessert")',
+app.get('/FVoorEnDessert/:Editie', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT COUNT(DISTINCT(F.Name)) as Aantal FROM Families F WHERE F.Name IN( SELECT F.Name FROM Families F INNER JOIN Orders O ON O.Family_ID=F.ID INNER JOIN OrderDetails D ON D.OrderID = O.ID INNER JOIN Products P ON P.ID = D.ProductID WHERE P.newCategory = "Voorgerecht" AND O.Editie_ID = "' + req.params.Editie +'") AND F.Name IN( SELECT F.Name FROM Families F INNER JOIN Orders O ON O.Family_ID=F.ID INNER JOIN OrderDetails D ON D.OrderID = O.ID INNER JOIN Products P ON P.ID = D.ProductID WHERE P.newCategory = "Dessert" AND O.Editie_ID = "' + req.params.Editie +'")',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -137,8 +137,8 @@ app.get('/FVoorEnDessert', function(req, res){ //GET method to access DB and ret
     res.end(JSON.stringify(data));
   });
 });
-app.get('/FVoorEnHoofdEnDessert', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT COUNT(DISTINCT(F.Name)) as Aantal FROM Families F WHERE F.Name IN( SELECT F.Name FROM Families F INNER JOIN Orders O ON O.Family_ID=F.ID INNER JOIN OrderDetails D ON D.OrderID = O.ID INNER JOIN Products P ON P.ID = D.ProductID WHERE P.newCategory = "Voorgerecht") AND F.Name IN( SELECT F.Name FROM Families F INNER JOIN Orders O ON O.Family_ID=F.ID INNER JOIN OrderDetails D ON D.OrderID = O.ID INNER JOIN Products P ON P.ID = D.ProductID WHERE P.newCategory = "Hoofdgerecht") AND F.Name IN( SELECT F.Name FROM Families F INNER JOIN Orders O ON O.Family_ID=F.ID INNER JOIN OrderDetails D ON D.OrderID = O.ID INNER JOIN Products P ON P.ID = D.ProductID WHERE P.newCategory = "Dessert") ',
+app.get('/FVoorEnHoofdEnDessert/:Editie', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT COUNT(DISTINCT(F.Name)) as Aantal FROM Families F WHERE F.Name IN( SELECT F.Name FROM Families F INNER JOIN Orders O ON O.Family_ID=F.ID INNER JOIN OrderDetails D ON D.OrderID = O.ID INNER JOIN Products P ON P.ID = D.ProductID WHERE P.newCategory = "Voorgerecht" AND O.Editie_ID = "' + req.params.Editie +'") AND F.Name IN( SELECT F.Name FROM Families F INNER JOIN Orders O ON O.Family_ID=F.ID INNER JOIN OrderDetails D ON D.OrderID = O.ID INNER JOIN Products P ON P.ID = D.ProductID WHERE P.newCategory = "Hoofdgerecht" AND O.Editie_ID = "' + req.params.Editie +'") AND F.Name IN( SELECT F.Name FROM Families F INNER JOIN Orders O ON O.Family_ID=F.ID INNER JOIN OrderDetails D ON D.OrderID = O.ID INNER JOIN Products P ON P.ID = D.ProductID WHERE P.newCategory = "Dessert" AND O.Editie_ID = "' + req.params.Editie +'") ',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
