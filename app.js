@@ -15,8 +15,8 @@ var connection = mysql.createConnection({
   database: 'ID362979_Etentje'
 })
 
-app.get('/EditionsByCompany/:Editie', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT E.ID, E.Name FROM Edities E Where e.Company_ID = "' + req.params.Editie + '" ',
+app.get('/EditionsByCompany/:CID', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT E.ID, E.Name FROM Edities E Where e.Company_ID = "' + req.params.CID + '" ',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
