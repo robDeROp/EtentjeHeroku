@@ -15,6 +15,18 @@ var connection = mysql.createConnection({
   database: 'ID362979_Etentje'
 })
 
+app.get('/EditionsByCompany/:Editie', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT E.ID, E.Name FROM Edities E Where e.Company_ID = "' + req.params.Editie + '" ',
+  function(err, rows, fields){
+    if(err) throw err;
+    var data = [];
+    for(i=0;i<rows.length;i++){
+      data.push(rows[i]);
+    }
+    console.log(JSON.stringify(data));
+    res.end(JSON.stringify(data));
+  });
+});
 
 app.get('/Companys', function(req, res){ //GET method to access DB and return results in JSON
   connection.query('SELECT C.Name, C.Email FROM Company C ',
