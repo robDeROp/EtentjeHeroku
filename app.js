@@ -16,7 +16,7 @@ var connection = mysql.createConnection({
 })
 
 app.get('/PasswordCheck/:CID/:Password', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT COUNT(C.ID) FROM Company C WHERE C.ID = "' + req.params.CID + '" AND C.Code = "' + req.params.Password + '"',
+  connection.query('SELECT COUNT(C.ID) as CHECK FROM Company C WHERE C.ID = "' + req.params.CID + '" AND C.Code = "' + req.params.Password + '"',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
