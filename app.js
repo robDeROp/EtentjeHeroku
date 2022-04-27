@@ -16,7 +16,7 @@ var connection = mysql.createConnection({
 })
 
 app.get('/EditionsByCompany/:CID', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT E.ID, E.Name FROM Edities E Where e.Company_ID = "' + req.params.CID + '" ',
+  connection.query('SELECT E.ID, E.Name FROM Edities E Where E.Company_ID = "' + req.params.CID + '"',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
