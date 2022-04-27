@@ -15,6 +15,19 @@ var connection = mysql.createConnection({
   database: 'ID362979_Etentje'
 })
 
+app.get('/PasswordCheck/:Password', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT E.ID, E.Name FROM Edities E Where E.Company_ID = "' + req.params.Password + '"',
+  function(err, rows, fields){
+    if(err) throw err;
+    var data = [];
+    for(i=0;i<rows.length;i++){
+      data.push(rows[i]);
+    }
+    console.log(JSON.stringify(data));
+    res.end(JSON.stringify(data));
+  });
+});
+
 app.get('/EditionsByCompany/:CID', function(req, res){ //GET method to access DB and return results in JSON
   connection.query('SELECT E.ID, E.Name FROM Edities E Where E.Company_ID = "' + req.params.CID + '"',
   function(err, rows, fields){
