@@ -29,7 +29,7 @@ app.get('/EditionsByCompany/:Editie', function(req, res){ //GET method to access
 });
 
 app.get('/Companys', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT C.Name, C.Email FROM Company C ',
+  connection.query('SELECT C.ID as ID, C.Name as Name, C.Email as Email FROM Company C ',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
