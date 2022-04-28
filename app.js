@@ -14,7 +14,18 @@ var connection = mysql.createConnection({
   password: 'Sp15021!',
   database: 'ID362979_Etentje'
 })
-//ForDeploy _
+app.get('/GetEditie/:EID', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT Name FROM Editie WHERE ID = "' + req.params.EID + '"',
+  function(err, rows, fields){
+    if(err) throw err;
+    var data = [];
+    for(i=0;i<rows.length;i++){
+      data.push(rows[i]);
+    }
+    console.log(JSON.stringify(data));
+    res.end(JSON.stringify(data));
+  });
+});
 app.get('/PasswordCheck/:CID/:Password', function(req, res){ //GET method to access DB and return results in JSON
   connection.query('SELECT COUNT(C.ID) as COUNT FROM Company C WHERE C.ID = "' + req.params.CID + '" AND C.Code = "' + req.params.Password + '"',
   function(err, rows, fields){
