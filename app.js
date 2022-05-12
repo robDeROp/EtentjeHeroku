@@ -3,7 +3,6 @@ const cors = require('cors');
 const bodyparser = require('body-parser');
 const { response } = require('express');
  
-//Test for 
 const app = express();
 
 app.use(cors());
@@ -549,7 +548,7 @@ app.get('/newFam/:name/:capacity', function(req, res){ //GET method to access DB
 });
 
 app.get('/BestelFormDrank', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT Description, ID FROM Products WHERE Category LIKE "Bar"',
+  connection.query('SELECT Description, ID, newCategory  FROM Products WHERE Category LIKE "Bar"',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -561,7 +560,7 @@ app.get('/BestelFormDrank', function(req, res){ //GET method to access DB and re
   });
 });
 app.get('/BestelFormGerechten', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT Description, ID FROM Products WHERE Category LIKE "Keuken"',
+  connection.query('SELECT Description, ID, newCategory FROM Products WHERE Category LIKE "Keuken"',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -573,7 +572,7 @@ app.get('/BestelFormGerechten', function(req, res){ //GET method to access DB an
   });
 });
 app.get('/GetProductTotQuan', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT Description, ID FROM Products WHERE Category LIKE "Keuken"',
+  connection.query('SELECT Description, ID, newCategory FROM Products WHERE Category LIKE "Keuken"',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -585,7 +584,7 @@ app.get('/GetProductTotQuan', function(req, res){ //GET method to access DB and 
   });
 });
 app.get('/BestelFormDessert', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT Description, ID FROM Products WHERE Category LIKE "Dessert" OR Category LIKE "Bar"',
+  connection.query('SELECT Description, ID, newCategory FROM Products WHERE Category LIKE "Dessert" OR Category LIKE "Bar"',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
