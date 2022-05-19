@@ -444,7 +444,7 @@ app.get('/AllFamiliesForKassa/:Editie', function(req, res){ //GET method to acce
   });
 });
 app.get('/AllFamilies/:Editie', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT F.Name, coalesce(O.Table_ID, "") as Tafel_ID FROM Families F LEFT OUTER JOIN Orders O ON O.Family_ID = F.ID Where O.Editie_ID = "' + req.params.Editie + '" GROUP BY F.Name, O.Table_ID',
+  connection.query('SELECT F.Name, coalesce(O.Table_ID, "") as Tafel_ID FROM Families F LEFT OUTER JOIN Orders O ON O.Family_ID = F.ID Where F.Editie_ID = "' + req.params.Editie + '" GROUP BY F.Name, O.Table_ID',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
