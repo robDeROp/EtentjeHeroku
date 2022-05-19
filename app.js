@@ -17,7 +17,16 @@ var connection = mysql.createConnection({
   database: 'ID362979_Etentje'
 })
 app.get('/', function (req, res) {
-  res.send('Hello Node + GitHub! This code push has auto-deployed!');
+  connection.query('SELECT E.Name FROM Edities E WHERE E.ID = "' + req.params.EID + '"',
+  function(err, rows, fields){
+    if(err) throw err;
+    var data = [];
+    for(i=0;i<rows.length;i++){
+      data.push(rows[i]);
+    }
+    console.log(JSON.stringify(data));
+    res.end(JSON.stringify(data));
+  });
 });
 app.get('/GetEditie/:EID', function(req, res){ //GET method to access DB and return results in JSON
   connection.query('SELECT E.Name FROM Edities E WHERE E.ID = "' + req.params.EID + '"',
