@@ -7,6 +7,8 @@ const app = express();
 
 app.use(cors());
 
+
+/**/
 mysql = require('mysql')
 var connection = mysql.createConnection({
   host: 'ID362979_Etentje.db.webhosting.be',
