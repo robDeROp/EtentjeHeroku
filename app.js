@@ -522,7 +522,7 @@ app.get('/DetailsOrder/:id/:Editie', function(req, res){ //GET method to access 
 
 
 app.get('/searchFamillie/:name/:Editie', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT Name FROM Families WHERE Name LIKE "' + req.params.name + '", AND O.Editie_ID = "' + req.params.Editie + '"',
+  connection.query('SELECT Name FROM Families WHERE Name LIKE "' + req.params.name + '" AND O.Editie_ID = "' + req.params.Editie + '"',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
