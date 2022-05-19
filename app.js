@@ -6,7 +6,7 @@ const { response } = require('express');
 const app = express();
 
 app.use(cors());
-
+/**/
 mysql = require('mysql')
 var connection = mysql.createConnection({
   host: 'ID362979_Etentje.db.webhosting.be',
@@ -642,7 +642,7 @@ app.get('/AllTotal/:name/:Editie', function(req, res){ //GET method to access DB
 });
 
 app.get('/Reciept/:name/:Editie', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT SUM(d.Quantity) as Quantity, p.Description, (p.Price*SUM(d.Quantity)) as Totaal FROM Products p INNER JOIN OrderDetails d ON p.ID = d.ProductID INNER JOIN Orders o ON o.ID = d.OrderID INNER JOIN Families F ON F.ID = o.Family_ID WHERE F.Name = "' + req.params.name + '" AND o.Payed="0" AND O.Editie_ID = "' + req.params.Editie + '" GROUP BY p.Description ORDER BY p.indexKassaExcel',
+  connection.query('SELECT SUM(d.Quantity) as Quantity, p.Description, (p.Price*SUM(d.Quantity)) as Totaal FROM Products p INNER JOIN OrderDetails d ON p.ID = d.ProductID INNER JOIN Orders o ON o.ID = d.OrderID INNER JOIN Families F ON F.ID = o.Family_ID WHERE F.Name = "' + req.params.name + '" AND o.Payed="0" AND O.Editie_ID = "' + req.params.Editie + '" GROUP BY p.Description',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
