@@ -16,6 +16,9 @@ var connection = mysql.createConnection({
   password: 'Sp15021!',
   database: 'ID362979_Etentje'
 })
+app.get('/', function (req, res) {
+  res.send('Hello Node + GitHub! This code push has auto-deployed!');
+});
 app.get('/GetEditie/:EID', function(req, res){ //GET method to access DB and return results in JSON
   connection.query('SELECT E.Name FROM Edities E WHERE E.ID = "' + req.params.EID + '"',
   function(err, rows, fields){
