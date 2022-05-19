@@ -103,7 +103,7 @@ app.get('/getMenu/:Editie', function(req, res){ //GET method to access DB and re
 //Procenten
 
 app.get('/TotaalFamillies/:Editie', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT COUNT(F.Name) as Aantal From Families F',
+  connection.query('SELECT COUNT(F.Name) as Aantal From Families F Where F.Editie_ID"' + req.params.Editie + '"',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -394,7 +394,7 @@ app.get('/BarOrdersWaiters/:Editie', function(req, res){ //GET method to access 
   });
 });
 app.get('/CashVSKaart/:Editie', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT O.Pay_Way, SUM(D.Quantity*P.Price) as Quan FROM Orders O INNER JOIN OrderDetails D ON O.ID = D.OrderID INNER JOIN Products P ON P.ID = D.ProductID WHERE O.Editie_ID = "' + req.params.Editie + '" GROUP BY O.Pay_Way ',
+  connection.query('SELECT O.Pay_Way, SUM(D.Quantity*P.Price) as Quan FROM Orders O INNER JOIN OrderDetails D ON O.ID = D.OrderID INNER JOIN Products P ON P.ID = D.ProductID WHERE O.Editie_ID = "' + req.params.Editie + '"  GROUP BY O.Pay_Way ',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -406,9 +406,9 @@ app.get('/CashVSKaart/:Editie', function(req, res){ //GET method to access DB an
   });
 });
 //ADMIN PAGINA
-
-app.get('/ReprintStatusUpdateBar/:id', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('UPDATE `Orders` SET `BarPrint`="0" WHERE `ID`="' + req.params.id + '" ',
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+app.get('/ReprintStatusUpdateBar/:id/:Editie', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('UPDATE `Orders` SET `BarPrint`="0" WHERE `ID`="' + req.params.id + '" AND Editie_ID"' + req.params.Editie + '" ',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -431,8 +431,8 @@ app.get('/ReprintStatusUpdateBar/:id', function(req, res){ //GET method to acces
 //     res.end(JSON.stringify(data));
 //   });
 // });
-app.get('/AllFamiliesForKassa', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT F.Name FROM Families F LEFT OUTER JOIN Orders O ON O.Family_ID = F.ID GROUP BY F.Name',
+app.get('/AllFamiliesForKassa/:Editie', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT F.Name FROM Families F LEFT OUTER JOIN Orders O ON O.Family_ID = F.ID Where O.Editie_ID"' + req.params.Editie + '" GROUP BY F.Name',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -443,8 +443,8 @@ app.get('/AllFamiliesForKassa', function(req, res){ //GET method to access DB an
     res.end(JSON.stringify(data));
   });
 });
-app.get('/AllFamilies', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT F.Name, coalesce(O.Table_ID, "") as Tafel_ID FROM Families F LEFT OUTER JOIN Orders O ON O.Family_ID = F.ID GROUP BY F.Name, O.Table_ID',
+app.get('/AllFamilies/:Editie', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT F.Name, coalesce(O.Table_ID, "") as Tafel_ID FROM Families F LEFT OUTER JOIN Orders O ON O.Family_ID = F.ID Where O.Editie_ID"' + req.params.Editie + '" GROUP BY F.Name, O.Table_ID',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -455,8 +455,8 @@ app.get('/AllFamilies', function(req, res){ //GET method to access DB and return
     res.end(JSON.stringify(data));
   });
 });
-app.get('/ReprintStatusUpdateKeuken/:id', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('UPDATE `Orders` SET `KeukenPrint`="0" WHERE `ID`="' + req.params.id + '" ',
+app.get('/ReprintStatusUpdateKeuken/:id/:Editie', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('UPDATE `Orders` SET `KeukenPrint`="0" WHERE `ID`="' + req.params.id + '" AND Editie_ID"' + req.params.Editie + '"',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -467,8 +467,8 @@ app.get('/ReprintStatusUpdateKeuken/:id', function(req, res){ //GET method to ac
     res.end(JSON.stringify(data));
   });
 });
-app.get('/BarIndex/:f', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT COUNT(O.ID) as BarOrderIndex, F.Capacity FROM Orders O INNER JOIN OrderDetails D on O.ID = D.OrderID INNER JOIN Products P on D.ProductID = P.ID INNER JOIN Families F ON F.ID = O.Family_ID WHERE F.Name = "' + req.params.f + '"  AND P.Category = "Bar" ',
+app.get('/BarIndex/:f/:Editie', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT COUNT(O.ID) as BarOrderIndex, F.Capacity FROM Orders O INNER JOIN OrderDetails D on O.ID = D.OrderID INNER JOIN Products P on D.ProductID = P.ID INNER JOIN Families F ON F.ID = O.Family_ID WHERE F.Name = "' + req.params.f + '"  AND P.Category = "Bar" AND O.Editie_ID"' + req.params.Editie + '"',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -480,8 +480,8 @@ app.get('/BarIndex/:f', function(req, res){ //GET method to access DB and return
   });
 });
 //BREF
-app.get('/GetFamID/:name', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT ID FROM Families WHERE Name = "' + req.params.name + '"',
+app.get('/GetFamID/:name/:Editie', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT ID FROM Families WHERE Name = "' + req.params.name + '" AND Editie_ID"' + req.params.Editie + '"',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -493,8 +493,8 @@ app.get('/GetFamID/:name', function(req, res){ //GET method to access DB and ret
   });
 });
 
-app.get('/searchWaiter/:id', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT FirstName FROM Waiters WHERE ID LIKE "' + req.params.id + '"',
+app.get('/searchWaiter/:id/:Editie', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT FirstName FROM Waiters WHERE ID LIKE "' + req.params.id + '" AND Editie_ID"' + req.params.Editie + '"',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -506,8 +506,8 @@ app.get('/searchWaiter/:id', function(req, res){ //GET method to access DB and r
   });
 });
 
-app.get('/DetailsOrder/:id', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT P.Description, D.Quantity FROM Orders O INNER JOIN OrderDetails D ON O.ID=D.OrderID INNER JOIN Products P ON D.ProductID=P.ID WHERE O.ID LIKE "' + req.params.id + '"',
+app.get('/DetailsOrder/:id/:Editie', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT P.Description, D.Quantity FROM Orders O INNER JOIN OrderDetails D ON O.ID=D.OrderID INNER JOIN Products P ON D.ProductID=P.ID WHERE O.ID LIKE "' + req.params.id + '", AND O.Editie_ID"' + req.params.Editie + '"',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -521,8 +521,8 @@ app.get('/DetailsOrder/:id', function(req, res){ //GET method to access DB and r
 
 
 
-app.get('/searchFamillie/:name', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT Name FROM Families WHERE Name LIKE "' + req.params.name + '"',
+app.get('/searchFamillie/:name/:Editie', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT Name FROM Families WHERE Name LIKE "' + req.params.name + '", AND O.Editie_ID"' + req.params.Editie + '"',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -534,8 +534,8 @@ app.get('/searchFamillie/:name', function(req, res){ //GET method to access DB a
   });
 });
 
-app.get('/newFam/:name/:capacity', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('INSERT INTO Families(Name, Capacity) VALUES ("' + req.params.name + '", "' + req.params.capacity + '") ',
+app.get('/newFam/:name/:capacity/:Editie', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('INSERT INTO Families(Name, Capacity, Editie_ID) VALUES ("' + req.params.name + '", "' + req.params.capacity + '","' + req.params.Editie + '") ',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -547,8 +547,8 @@ app.get('/newFam/:name/:capacity', function(req, res){ //GET method to access DB
   });
 });
 
-app.get('/BestelFormDrank', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT Description, ID, newCategory  FROM Products WHERE Category LIKE "Bar"',
+app.get('/BestelFormDrank/:Editie', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT Description, ID, newCategory  FROM Products WHERE Category LIKE "Bar" AND Editie_ID"' + req.params.Editie + '"',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -559,8 +559,8 @@ app.get('/BestelFormDrank', function(req, res){ //GET method to access DB and re
     res.end(JSON.stringify(data));
   });
 });
-app.get('/BestelFormGerechten', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT Description, ID, newCategory FROM Products WHERE Category LIKE "Keuken"',
+app.get('/BestelFormGerechten/:Editie', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT Description, ID, newCategory FROM Products WHERE Category LIKE "Keuken" AND Editie_ID"' + req.params.Editie + '"',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -571,8 +571,8 @@ app.get('/BestelFormGerechten', function(req, res){ //GET method to access DB an
     res.end(JSON.stringify(data));
   });
 });
-app.get('/GetProductTotQuan', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT Description, ID, newCategory FROM Products WHERE Category LIKE "Keuken"',
+app.get('/GetProductTotQuan/:Editie', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT Description, ID, newCategory FROM Products WHERE Category LIKE "Keuken" AND O.Editie_ID"' + req.params.Editie + '"',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -583,8 +583,8 @@ app.get('/GetProductTotQuan', function(req, res){ //GET method to access DB and 
     res.end(JSON.stringify(data));
   });
 });
-app.get('/BestelFormDessert', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT Description, ID, newCategory FROM Products WHERE Category LIKE "Dessert" OR Category LIKE "Bar"',
+app.get('/BestelFormDessert/:Editie', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT Description, ID, newCategory FROM Products WHERE (Category LIKE "Dessert" OR Category LIKE "Bar") AND O.Editie_ID"' + req.params.Editie + '"',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -600,8 +600,8 @@ app.listen(process.env.PORT || 3000, function(){
 });
 
 
-app.get('/LastOrder/:Wid', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT MAX(ID) as id FROM Orders WHERE Waiter_ID= "' + req.params.Wid + '"',
+app.get('/LastOrder/:Wid/:Editie', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT MAX(ID) as id FROM Orders WHERE Waiter_ID= "' + req.params.Wid + '" AND Editie_ID"' + req.params.Editie + '"',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -614,8 +614,8 @@ app.get('/LastOrder/:Wid', function(req, res){ //GET method to access DB and ret
 });
 
     //KASSA PAGINA
-  app.get('/PayOrder/:id/:method/:PayTime', function(req, res){ //GET method to access DB and return results in JSON
-    connection.query('UPDATE `Orders` SET `Payed`="1", `Pay_Way`  = "'+ req.params.method + '", `Payed_TimeStamp` = "'+ req.params.PayTime + '" WHERE ID= "' + req.params.id + '"',
+  app.get('/PayOrder/:id/:method/:PayTime/:Editie', function(req, res){ //GET method to access DB and return results in JSON
+    connection.query('UPDATE `Orders` SET `Payed`="1", `Pay_Way`  = "'+ req.params.method + '", `Payed_TimeStamp` = "'+ req.params.PayTime + '" WHERE ID= "' + req.params.id + '" AND Editie_ID"' + req.params.Editie + '"',
     function(err, rows, fields){
       if(err) throw err;
       var data = [];
@@ -628,8 +628,8 @@ app.get('/LastOrder/:Wid', function(req, res){ //GET method to access DB and ret
   });
 
 
-app.get('/AllTotal/:name', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT SUM(P.Price * D.Quantity) as Totaal, F.Name FROM Products P INNER JOIN OrderDetails D ON P.ID = D.ProductID INNER JOIN Orders O ON D.OrderID = O.ID INNER JOIN Families F ON F.ID = O.Family_ID WHERE F.Name = "' + req.params.name + '" AND O.Payed="0"',
+app.get('/AllTotal/:name/:Editie', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT SUM(P.Price * D.Quantity) as Totaal, F.Name FROM Products P INNER JOIN OrderDetails D ON P.ID = D.ProductID INNER JOIN Orders O ON D.OrderID = O.ID INNER JOIN Families F ON F.ID = O.Family_ID WHERE F.Name = "' + req.params.name + '" AND O.Payed="0" AND O.Editie_ID"' + req.params.Editie + '"',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -641,8 +641,8 @@ app.get('/AllTotal/:name', function(req, res){ //GET method to access DB and ret
   });
 });
 
-app.get('/Reciept/:name', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT SUM(d.Quantity) as Quantity, p.Description, (p.Price*SUM(d.Quantity)) as Totaal FROM Products p INNER JOIN OrderDetails d ON p.ID = d.ProductID INNER JOIN Orders o ON o.ID = d.OrderID INNER JOIN Families F ON F.ID = o.Family_ID WHERE F.Name = "' + req.params.name + '" AND o.Payed="0" GROUP BY p.Description ORDER BY p.indexKassaExcel',
+app.get('/Reciept/:name/:Editie', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT SUM(d.Quantity) as Quantity, p.Description, (p.Price*SUM(d.Quantity)) as Totaal FROM Products p INNER JOIN OrderDetails d ON p.ID = d.ProductID INNER JOIN Orders o ON o.ID = d.OrderID INNER JOIN Families F ON F.ID = o.Family_ID WHERE F.Name = "' + req.params.name + '" AND o.Payed="0" AND O.Editie_ID"' + req.params.Editie + '" GROUP BY p.Description ORDER BY p.indexKassaExcel',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -654,8 +654,8 @@ app.get('/Reciept/:name', function(req, res){ //GET method to access DB and retu
   });
 });
 
-app.get('/OrderLines/:name', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT O.ID, D.Quantity, P.Description, P.Price, (D.Quantity * P.Price) as Total FROM Orders O INNER JOIN OrderDetails D ON O.ID = D.OrderID INNER JOIN Products P ON D.ProductID = P.ID INNER JOIN Families F ON F.ID = O.Family_ID WHERE F.Name =  "' + req.params.name + '"AND O.Payed="0"',
+app.get('/OrderLines/:name/:Editie', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT O.ID, D.Quantity, P.Description, P.Price, (D.Quantity * P.Price) as Total FROM Orders O INNER JOIN OrderDetails D ON O.ID = D.OrderID INNER JOIN Products P ON D.ProductID = P.ID INNER JOIN Families F ON F.ID = O.Family_ID WHERE F.Name =  "' + req.params.name + '"AND O.Payed="0" AND O.Editie_ID"' + req.params.Editie + '"',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -667,8 +667,8 @@ app.get('/OrderLines/:name', function(req, res){ //GET method to access DB and r
   });
 });
 
-app.get('/OrderAndTotal/:name', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT O.ID, O.Table_ID, SUM(D.Quantity*P.Price) as OrderTotal FROM Orders O INNER JOIN OrderDetails D ON O.ID = D.OrderID INNER JOIN Products P ON P.ID = D.ProductID INNER JOIN Families F ON F.ID = O.Family_ID WHERE  F.Name = "' + req.params.name + '" AND O.Payed="0" GROUP BY O.ID',
+app.get('/OrderAndTotal/:name/:Editie', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT O.ID, O.Table_ID, SUM(D.Quantity*P.Price) as OrderTotal FROM Orders O INNER JOIN OrderDetails D ON O.ID = D.OrderID INNER JOIN Products P ON P.ID = D.ProductID INNER JOIN Families F ON F.ID = O.Family_ID WHERE  F.Name = "' + req.params.name + '" AND O.Payed="0" AND O.Editie_ID"' + req.params.Editie + '" GROUP BY O.ID',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -680,8 +680,8 @@ app.get('/OrderAndTotal/:name', function(req, res){ //GET method to access DB an
   });
 });
 
-app.get('/NewOrder/:FamID', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT COUNT(O.ID) AS Count, F.Capacity FROM Orders O INNER JOIN Families F ON O.Family_ID = F.ID WHERE O.Family_ID = "'+ req.params.FamID +'"',
+app.get('/NewOrder/:FamID/:Editie', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT COUNT(O.ID) AS Count, F.Capacity FROM Orders O INNER JOIN Families F ON O.Family_ID = F.ID WHERE O.Family_ID = "'+ req.params.FamID +'" AND O.Editie_ID"' + req.params.Editie + '"',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -693,8 +693,8 @@ app.get('/NewOrder/:FamID', function(req, res){ //GET method to access DB and re
   });
 });
 
-app.get('/NewOrder/:WaiterID/:FamilieID/:TableID/:TimeWeb/:Opmerking', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('INSERT INTO Orders(Waiter_ID,Family_ID,Table_ID,TimeWeb,Opmerking) VALUES ("'+ req.params.WaiterID +'","'+ req.params.FamilieID +'","'+ req.params.TableID +'","'+ req.params.TimeWeb + '","'+ req.params.Opmerking +'")',
+app.get('/NewOrder/:WaiterID/:FamilieID/:TableID/:TimeWeb/:Opmerking/:Editie', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('INSERT INTO Orders(Waiter_ID,Family_ID,Table_ID,TimeWeb,Opmerking,Editie_ID) VALUES ("'+ req.params.WaiterID +'","'+ req.params.FamilieID +'","'+ req.params.TableID +'","'+ req.params.TimeWeb + '","'+ req.params.Opmerking +'","' + req.params.Editie + '")',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -706,8 +706,8 @@ app.get('/NewOrder/:WaiterID/:FamilieID/:TableID/:TimeWeb/:Opmerking', function(
   });
 });
 
-app.get('/NewOrderLine/:OrderID/:ProdID/:ProdQuantity', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('INSERT INTO `OrderDetails`(`OrderID`, `ProductID`, `Quantity`) VALUES ("'+ req.params.OrderID + '","'+ req.params.ProdID +'","'+ req.params.ProdQuantity +'")',
+app.get('/NewOrderLine/:OrderID/:ProdID/:ProdQuantity/:Editie', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('INSERT INTO `OrderDetails`(`OrderID`, `ProductID`, `Quantity`, Editie_ID) VALUES ("'+ req.params.OrderID + '","'+ req.params.ProdID +'","'+ req.params.ProdQuantity +'","' + req.params.Editie + '")',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -718,8 +718,8 @@ app.get('/NewOrderLine/:OrderID/:ProdID/:ProdQuantity', function(req, res){ //GE
     res.end(JSON.stringify(data));
   });
 });
-app.get('/NewPrintResetAfterLineAdd/:OrderID', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('UPDATE `Orders` SET `KeukenPrint`=0,`BarPrint`=0,`DessertPrint`= 0 WHERE Orders.ID = "'+ req.params.OrderID +'")',
+app.get('/NewPrintResetAfterLineAdd/:OrderID/:Editie', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('UPDATE `Orders` SET Editie_ID = "' + req.params.Editie + '", `KeukenPrint`=0,`BarPrint`=0,`DessertPrint`= 0 WHERE Orders.ID = "'+ req.params.OrderID +'")',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -731,8 +731,8 @@ app.get('/NewPrintResetAfterLineAdd/:OrderID', function(req, res){ //GET method 
   });
 });
 /*GET THE ORDER*/
-app.get('/DessertMinOrder', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT MIN(ID) as id FROM Orders WHERE DessertPrint = 0 ',
+app.get('/DessertMinOrder/:Editie', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT MIN(ID) as id FROM Orders WHERE DessertPrint = 0 AND Editie_ID = "' + req.params.Editie + '"',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -744,8 +744,8 @@ app.get('/DessertMinOrder', function(req, res){ //GET method to access DB and re
   });
 });
 
-app.get('/BarMinOrder', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT MIN(ID) as id FROM Orders WHERE BarPrint = 0 ',
+app.get('/BarMinOrder/:Editie', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT MIN(ID) as id FROM Orders WHERE BarPrint = 0 AND Editie_ID = "' + req.params.Editie + '"',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -757,8 +757,8 @@ app.get('/BarMinOrder', function(req, res){ //GET method to access DB and return
   });
 });
 
-app.get('/KeukenMinOrder', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT MIN(ID) as id FROM Orders WHERE KeukenPrint = 0 ',
+app.get('/KeukenMinOrder/:Editie', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT MIN(ID) as id FROM Orders WHERE KeukenPrint = 0 AND Editie_ID = "' + req.params.Editie + '"',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -769,8 +769,8 @@ app.get('/KeukenMinOrder', function(req, res){ //GET method to access DB and ret
     res.end(JSON.stringify(data));
   });
 });
-app.get('/KinderMenuQuan/:name', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT P.Description, SUM(D.Quantity) as Quantity FROM OrderDetails D INNER JOIN Orders O ON O.ID = D.OrderID INNER JOIN Products P ON P.ID = D.ProductID INNER JOIN Families F ON F.ID = O.Family_ID WHERE F.Name = "'+ req.params.name +'" AND P.Description = "Kindermenu" GROUP BY P.Description ',
+app.get('/KinderMenuQuan/:name/:Editie', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT P.Description, SUM(D.Quantity) as Quantity FROM OrderDetails D INNER JOIN Orders O ON O.ID = D.OrderID INNER JOIN Products P ON P.ID = D.ProductID INNER JOIN Families F ON F.ID = O.Family_ID WHERE F.Name = "'+ req.params.name +'" AND P.Description = "Kindermenu" AND P.Editie_ID = "' + req.params.Editie + '" GROUP BY P.Description ',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -819,8 +819,8 @@ app.get('/KeukenOrderID', function(req, res){ //GET method to access DB and retu
   });
 });*/
 
-app.get('/DessertOrder', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT O.ID, W.FirstName AS WaiterName,O.Opmerking, F.Name AS FamilyName, O.TimeWeb ,O.Table_ID, P.Description, D.Quantity FROM Orders O JOIN OrderDetails D ON O.ID=D.OrderID JOIN Products P ON D.ProductID = P.ID JOIN Families F ON F.ID = O.Family_ID JOIN Waiters W ON W.ID = O.Waiter_ID WHERE P.Category = "Dessert" AND O.ID IN ( SELECT MIN(ID) FROM Orders WHERE DessertPrint="0" )',
+app.get('/DessertOrder/:Editie', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT O.ID, W.FirstName AS WaiterName,O.Opmerking, F.Name AS FamilyName, O.TimeWeb ,O.Table_ID, P.Description, D.Quantity FROM Orders O JOIN OrderDetails D ON O.ID=D.OrderID JOIN Products P ON D.ProductID = P.ID JOIN Families F ON F.ID = O.Family_ID JOIN Waiters W ON W.ID = O.Waiter_ID WHERE P.Category = "Dessert" AND O.ID IN ( SELECT MIN(ID) FROM Orders WHERE DessertPrint="0" ) AND O.Editie_ID = "' + req.params.Editie + '"',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -832,8 +832,8 @@ app.get('/DessertOrder', function(req, res){ //GET method to access DB and retur
   });
 });
 
-app.get('/BarOrder', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT O.ID, W.FirstName AS WaiterName,O.Opmerking, F.Name AS FamilyName, O.TimeWeb ,O.Table_ID, P.Description, D.Quantity FROM Orders O JOIN OrderDetails D ON O.ID=D.OrderID JOIN Products P ON D.ProductID = P.ID JOIN Families F ON F.ID = O.Family_ID JOIN Waiters W ON W.ID = O.Waiter_ID WHERE P.Category = "Bar" AND O.ID IN ( SELECT MIN(ID) FROM Orders WHERE BarPrint="0" )',
+app.get('/BarOrder/:Editie', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT O.ID, W.FirstName AS WaiterName,O.Opmerking, F.Name AS FamilyName, O.TimeWeb ,O.Table_ID, P.Description, D.Quantity FROM Orders O JOIN OrderDetails D ON O.ID=D.OrderID JOIN Products P ON D.ProductID = P.ID JOIN Families F ON F.ID = O.Family_ID JOIN Waiters W ON W.ID = O.Waiter_ID WHERE P.Category = "Bar" AND O.ID IN ( SELECT MIN(ID) FROM Orders WHERE BarPrint="0" ) AND O.Editie_ID = "' + req.params.Editie + '"',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -845,8 +845,8 @@ app.get('/BarOrder', function(req, res){ //GET method to access DB and return re
   });
 });
 
-app.get('/KeukenOrder', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('SELECT O.ID, W.FirstName AS WaiterName, F.Name AS FamilyName,O.Opmerking, O.TimeWeb ,O.Table_ID, P.Description, D.Quantity FROM Orders O JOIN OrderDetails D ON O.ID=D.OrderID JOIN Products P ON D.ProductID = P.ID JOIN Families F ON F.ID = O.Family_ID JOIN Waiters W ON W.ID = O.Waiter_ID WHERE P.Category = "Keuken" AND O.ID IN ( SELECT MIN(ID) FROM Orders WHERE KeukenPrint="0" )',
+app.get('/KeukenOrder/:Editie', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('SELECT O.ID, W.FirstName AS WaiterName, F.Name AS FamilyName,O.Opmerking, O.TimeWeb ,O.Table_ID, P.Description, D.Quantity FROM Orders O JOIN OrderDetails D ON O.ID=D.OrderID JOIN Products P ON D.ProductID = P.ID JOIN Families F ON F.ID = O.Family_ID JOIN Waiters W ON W.ID = O.Waiter_ID WHERE P.Category = "Keuken" AND O.ID IN ( SELECT MIN(ID) FROM Orders WHERE KeukenPrint="0" )AND O.Editie_ID = "' + req.params.Editie + '"',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -859,8 +859,8 @@ app.get('/KeukenOrder', function(req, res){ //GET method to access DB and return
 });
 
 /*Change ORDER PRINT STATE*/
-app.get('/DessertOrderPrinted/:id', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('UPDATE Orders SET DessertPrint= "1" WHERE ID = "'+ req.params.id + '"',
+app.get('/DessertOrderPrinted/:id/:Editie', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('UPDATE Orders SET DessertPrint= "1", Editie_ID = "' + req.params.Editie + '" WHERE ID = "'+ req.params.id + '"',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -873,8 +873,8 @@ app.get('/DessertOrderPrinted/:id', function(req, res){ //GET method to access D
 });
 
 
-app.get('/BarOrderPrinted/:id', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('UPDATE Orders SET BarPrint= "1" WHERE ID = "'+ req.params.id + '"',
+app.get('/BarOrderPrinted/:id/:Editie', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('UPDATE Orders SET BarPrint= "1", Editie_ID = "' + req.params.Editie + '" WHERE ID = "'+ req.params.id + '"',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
@@ -886,8 +886,8 @@ app.get('/BarOrderPrinted/:id', function(req, res){ //GET method to access DB an
   });
 });
 
-app.get('/KeukenOrderPrinted/:id', function(req, res){ //GET method to access DB and return results in JSON
-  connection.query('UPDATE Orders SET KeukenPrint= "1" WHERE ID = "'+ req.params.id + '"',
+app.get('/KeukenOrderPrinted/:id/:Editie', function(req, res){ //GET method to access DB and return results in JSON
+  connection.query('UPDATE Orders SET KeukenPrint= "1", Editie_ID = "' + req.params.Editie + '" WHERE ID = "'+ req.params.id + '"',
   function(err, rows, fields){
     if(err) throw err;
     var data = [];
